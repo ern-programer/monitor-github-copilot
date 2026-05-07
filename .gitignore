@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+.auth/
+*.pyc
+dist_liviano/
+dist_liviano.zip
+single_instance_events.txt
+monitor_config.ini
+RESUMEN_CONTINUIDAD_CHAT.md
+*.code-workspace

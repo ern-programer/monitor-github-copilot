@@ -1187,6 +1187,7 @@ class FloatingBarApp:
         self._switching_to_fallback_dock = False
         self._show_desktop_fallback_active = False
         self._show_desktop_fallback_until_ts = 0.0
+        self._desktop_foreground_ticks = 0
 
         self.clients = [CopilotUsageClient(state_file=sf, headless=True) for sf in state_files]
 
@@ -2025,6 +2026,22 @@ class FloatingBarApp:
         except Exception:
             return None
 
+    def get_foreground_class_name(self) -> str:
+        try:
+            user32 = ctypes.windll.user32
+            hwnd = user32.GetForegroundWindow()
+            if not hwnd:
+                return ""
+            buffer = ctypes.create_unicode_buffer(256)
+            user32.GetClassNameW(hwnd, buffer, 255)
+            return str(buffer.value or "")
+        except Exception:
+            return ""
+
+    def is_desktop_foreground(self) -> bool:
+        class_name = self.get_foreground_class_name()
+        return class_name in {"Progman", "WorkerW", "Shell_TrayWnd", "Shell_SecondaryTrayWnd"}
+
     def get_compact_taskbar_position(self, width: int, height: int) -> tuple[int, int]:
         # Ubica el widget dentro de la taskbar, a la izquierda del area de notificacion.
         taskbar = self.get_taskbar_rect()
@@ -2391,6 +2408,15 @@ class FloatingBarApp:
                 log_runtime_event(f"Taskbar visibility snapshot: {snapshot}")
                 self._last_taskbar_visibility_snapshot = snapshot
 
+            desktop_foreground = self.is_desktop_foreground()
+            if desktop_foreground:
+                self._desktop_foreground_ticks += 1
+            else:
+                self._desktop_foreground_ticks = 0
+
+            if self._desktop_foreground_ticks == 2:
+                log_runtime_event("Desktop foreground detected in taskbar mode")
+
             if state in {"iconic", "withdrawn"} or not mapped or not viewable:
                 if self._last_visibility_guard_state != state:
                     log_runtime_event(f"Visibility guard: detected state={state}; forcing restore")
@@ -2411,15 +2437,23 @@ class FloatingBarApp:
                     self.apply_always_on_top()
                 except Exception:
                     pass
+                if self._desktop_foreground_ticks >= 2:
+                    self.activate_show_desktop_fallback(trigger_state="desktop_foreground")
             self._last_visibility_guard_state = state
+        else:
+            self._desktop_foreground_ticks = 0
 
         if self._show_desktop_fallback_active and not self.is_hidden_to_tray and now_ts >= self._show_desktop_fallback_until_ts:
-            self._show_desktop_fallback_active = False
-            self._show_desktop_fallback_until_ts = 0.0
-            self.dock_top = False
-            self.set_taskbar_compact_mode(True, persist_config=False)
-            self.apply_window_geometry(self.normal_window_width)
-            log_runtime_event("Show-desktop fallback finished: returned to taskbar mode")
+            if self.is_desktop_foreground():
+                self._show_desktop_fallback_until_ts = now_ts + 2.0
+                log_runtime_event("Show-desktop fallback extended while desktop remains foreground")
+            else:
+                self._show_desktop_fallback_active = False
+                self._show_desktop_fallback_until_ts = 0.0
+                self.dock_top = False
+                self.set_taskbar_compact_mode(True, persist_config=False)
+                self.apply_window_geometry(self.normal_window_width)
+                log_runtime_event("Show-desktop fallback finished: returned to taskbar mode")
 
         if now_ts - self.last_heartbeat_ts >= 15.0:
             self.last_heartbeat_ts = now_ts

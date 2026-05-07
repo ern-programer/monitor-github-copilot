@@ -2226,6 +2226,10 @@ class FloatingBarApp:
         self.root.after(self.interval_s * 1000, self.periodic_refresh)
         self.root.mainloop()
         log_runtime_event("Mainloop finalizado")
+        if not self.closed:
+            log_runtime_event("Salida inesperada de mainloop (sin cierre explicito)")
+            self.close(reason="unexpected_mainloop_exit")
+            return 2
         return 0
 
 
@@ -2267,23 +2271,29 @@ def run_monitor(args: argparse.Namespace) -> int:
         normalized = [args.state_file]
 
     if args.gui:
-        instance_server = create_single_instance_server()
-        app = FloatingBarApp(
-            state_files=normalized,
-            interval_s=interval_s,
-            mini_mode=mini_mode,
-            opacity=opacity,
-            auto_width=auto_width,
-            dock_top=dock_top,
-            window_width=window_width,
-            always_on_top=always_on_top,
-            taskbar_compact_mode=taskbar_compact_mode,
-            taskbar_compact_width=taskbar_compact_width,
-            theme=theme,
-            single_instance_server=instance_server,
-            config_path=args.config,
-        )
-        return app.run()
+        for attempt in range(2):
+            instance_server = create_single_instance_server()
+            app = FloatingBarApp(
+                state_files=normalized,
+                interval_s=interval_s,
+                mini_mode=mini_mode,
+                opacity=opacity,
+                auto_width=auto_width,
+                dock_top=dock_top,
+                window_width=window_width,
+                always_on_top=always_on_top,
+                taskbar_compact_mode=taskbar_compact_mode,
+                taskbar_compact_width=taskbar_compact_width,
+                theme=theme,
+                single_instance_server=instance_server,
+                config_path=args.config,
+            )
+            result = app.run()
+            if result != 2:
+                return result
+            log_runtime_event(f"Reinicio automatico tras salida inesperada (intento {attempt + 1}/1)")
+
+        return 1
 
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=args.headless)

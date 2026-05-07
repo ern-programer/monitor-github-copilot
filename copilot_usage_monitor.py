@@ -1169,6 +1169,8 @@ class FloatingBarApp:
         self.multi_rows: list[dict] = []
         self.tooltips: list[Tooltip] = []
         self.last_heartbeat_ts = 0.0
+        self._show_desktop_restore_pending = False
+        self._show_desktop_restore_attempts = 0
 
         self.clients = [CopilotUsageClient(state_file=sf, headless=True) for sf in state_files]
 
@@ -1383,6 +1385,7 @@ class FloatingBarApp:
         self.refresh_menu_state_labels()
         self.rebuild_settings_menu()
         self.root.bind("<Map>", self.on_map_restore)
+        self.root.bind("<Unmap>", self.on_unmap_event)
         self.canvas.bind("<Button-1>", self.on_canvas_click, add="+")
         if self.single_instance_server is not None:
             self.root.after(250, self.poll_single_instance_signal)
@@ -2137,6 +2140,8 @@ class FloatingBarApp:
     def on_map_restore(self, _event) -> None:
         if self.closed:
             return
+        self._show_desktop_restore_pending = False
+        self._show_desktop_restore_attempts = 0
         try:
             self.root.overrideredirect(True)
             self.apply_always_on_top()
@@ -2144,6 +2149,57 @@ class FloatingBarApp:
             log_runtime_event("Map/restore event handled")
         except Exception:
             pass
+
+    def on_unmap_event(self, _event) -> None:
+        if self.closed or self.is_hidden_to_tray or not self.taskbar_compact_mode:
+            return
+        try:
+            state = self.root.state()
+        except Exception:
+            return
+        if state != "iconic":
+            return
+        if self._show_desktop_restore_pending:
+            return
+
+        self._show_desktop_restore_pending = True
+        self._show_desktop_restore_attempts = 0
+        log_runtime_event("Window hidden by system (iconic) in taskbar mode; scheduling auto-restore")
+        self.root.after(180, self.ensure_taskbar_visibility)
+
+    def ensure_taskbar_visibility(self) -> None:
+        if self.closed or self.is_hidden_to_tray:
+            self._show_desktop_restore_pending = False
+            return
+        if not self.taskbar_compact_mode:
+            self._show_desktop_restore_pending = False
+            return
+
+        self._show_desktop_restore_attempts += 1
+        try:
+            state = self.root.state()
+        except Exception:
+            state = "unknown"
+
+        if state == "iconic":
+            try:
+                self.root.deiconify()
+                self.root.lift()
+                self.apply_always_on_top()
+                self.apply_window_geometry(self.window_width)
+                log_runtime_event(
+                    f"Auto-restored after show-desktop (attempt={self._show_desktop_restore_attempts})"
+                )
+            except Exception:
+                pass
+            if self._show_desktop_restore_attempts < 4:
+                self.root.after(220, self.ensure_taskbar_visibility)
+            else:
+                self._show_desktop_restore_pending = False
+                log_runtime_event("Auto-restore attempts exhausted")
+            return
+
+        self._show_desktop_restore_pending = False
 
     def bring_to_front(self, source: str = "manual") -> None:
         log_single_instance_event(f"bring_to_front solicitado ({source})")

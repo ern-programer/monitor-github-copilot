@@ -17,6 +17,9 @@ import re
 import socket
 import sys
 import time
+import atexit
+import faulthandler
+import threading
 import tkinter as tk
 import ctypes
 import json
@@ -51,6 +54,8 @@ SINGLE_INSTANCE_LOG_KEEP_LINES = 250
 RUNTIME_LOG_FILE = Path("monitor_runtime.log")
 RUNTIME_LOG_MAX_BYTES = 300 * 1024
 RUNTIME_LOG_KEEP_LINES = 350
+CRASH_LOG_FILE = Path("monitor_crash.log")
+HEARTBEAT_FILE = Path("monitor_heartbeat.txt")
 AUTOSTART_REG_NAME = "CopilotUsageBar"
 APP_VERSION = "v1.3.1"
 LANG_EN = "en"
@@ -786,6 +791,38 @@ def log_runtime_event(message: str) -> None:
         pass
 
 
+def log_crash_event(message: str) -> None:
+    try:
+        stamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with CRASH_LOG_FILE.open("a", encoding="utf-8") as fh:
+            fh.write(f"[{stamp}] {message}\n")
+    except Exception:
+        pass
+
+
+def setup_fatal_diagnostics() -> None:
+    def _sys_excepthook(exc_type, exc_value, exc_tb) -> None:
+        trace = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
+        log_crash_event("Unhandled sys exception:\n" + trace)
+
+    def _threading_excepthook(args) -> None:
+        trace = "".join(traceback.format_exception(args.exc_type, args.exc_value, args.exc_traceback))
+        log_crash_event(f"Unhandled thread exception ({args.thread.name}):\n" + trace)
+
+    def _atexit_hook() -> None:
+        log_crash_event("Process exiting (atexit)")
+
+    try:
+        crash_stream = CRASH_LOG_FILE.open("a", encoding="utf-8")
+        faulthandler.enable(file=crash_stream, all_threads=True)
+    except Exception:
+        pass
+
+    sys.excepthook = _sys_excepthook
+    threading.excepthook = _threading_excepthook
+    atexit.register(_atexit_hook)
+
+
 def try_signal_existing_instance() -> bool:
     try:
         with socket.create_connection((SINGLE_INSTANCE_HOST, SINGLE_INSTANCE_PORT), timeout=0.4) as conn:
@@ -1129,6 +1166,7 @@ class FloatingBarApp:
         self.compact_active_index = 0
         self.multi_rows: list[dict] = []
         self.tooltips: list[Tooltip] = []
+        self.last_heartbeat_ts = 0.0
 
         self.clients = [CopilotUsageClient(state_file=sf, headless=True) for sf in state_files]
 
@@ -2180,6 +2218,16 @@ class FloatingBarApp:
         if self.closed:
             return
         self.time_label.config(text=f"{dt.datetime.now():%H:%M:%S}")
+        now_ts = time.time()
+        if now_ts - self.last_heartbeat_ts >= 15.0:
+            self.last_heartbeat_ts = now_ts
+            try:
+                stamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                mode = "taskbar" if self.taskbar_compact_mode else "full"
+                with HEARTBEAT_FILE.open("w", encoding="utf-8") as fh:
+                    fh.write(f"{stamp} | pid={os.getpid()} | mode={mode}\n")
+            except Exception:
+                pass
         self.root.after(1000, self.periodic_clock)
 
     def create_tray_image(self) -> object:
@@ -2467,6 +2515,7 @@ def run_monitor(args: argparse.Namespace) -> int:
 
 
 def main() -> int:
+    setup_fatal_diagnostics()
     args = parse_arguments()
 
     assistant_result = run_account_assistant(args)

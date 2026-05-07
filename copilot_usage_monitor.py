@@ -1171,6 +1171,7 @@ class FloatingBarApp:
         self.last_heartbeat_ts = 0.0
         self._show_desktop_restore_pending = False
         self._show_desktop_restore_attempts = 0
+        self._last_visibility_guard_state = "normal"
 
         self.clients = [CopilotUsageClient(state_file=sf, headless=True) for sf in state_files]
 
@@ -2307,6 +2308,25 @@ class FloatingBarApp:
         if self.closed:
             return
         self.time_label.config(text=f"{dt.datetime.now():%H:%M:%S}")
+
+        if self.taskbar_compact_mode and not self.is_hidden_to_tray:
+            try:
+                state = self.root.state()
+            except Exception:
+                state = "unknown"
+
+            if state in {"iconic", "withdrawn"}:
+                if self._last_visibility_guard_state != state:
+                    log_runtime_event(f"Visibility guard: detected state={state}; forcing restore")
+                try:
+                    self.root.deiconify()
+                    self.root.lift()
+                    self.apply_always_on_top()
+                    self.apply_window_geometry(self.window_width)
+                except Exception:
+                    pass
+            self._last_visibility_guard_state = state
+
         now_ts = time.time()
         if now_ts - self.last_heartbeat_ts >= 15.0:
             self.last_heartbeat_ts = now_ts

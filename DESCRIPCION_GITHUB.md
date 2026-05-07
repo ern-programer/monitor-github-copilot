@@ -45,4 +45,4 @@ The project does not use an official public API endpoint for this value. It read
 
 ## Current visual version
 
-Current visual version: v1.3.3
+Current visual version: v1.3.4

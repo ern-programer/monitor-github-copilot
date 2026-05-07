@@ -57,7 +57,7 @@ RUNTIME_LOG_KEEP_LINES = 350
 CRASH_LOG_FILE = Path("monitor_crash.log")
 HEARTBEAT_FILE = Path("monitor_heartbeat.txt")
 AUTOSTART_REG_NAME = "CopilotUsageBar"
-APP_VERSION = "v1.3.3"
+APP_VERSION = "v1.3.4"
 LANG_EN = "en"
 LANG_ES = "es"
 
@@ -111,11 +111,11 @@ THEME_PALETTES = {
 UI_TEXTS = {
     "loading": {LANG_EN: "Loading...", LANG_ES: "Cargando..."},
     "update_now": {LANG_EN: "Refresh now", LANG_ES: "Actualizar ahora"},
-    "notif_area": {LANG_EN: "Notification area", LANG_ES: "Area de notificacion"},
+    "notif_area": {LANG_EN: "Notification area", LANG_ES: "Area de notificación"},
     "minimize": {LANG_EN: "Minimize", LANG_ES: "Minimizar"},
     "always_visible": {LANG_EN: "Always on top: {state}", LANG_ES: "Siempre visible: {state}"},
     "toggle_dock_top": {LANG_EN: "Toggle top dock", LANG_ES: "Alternar dock superior"},
-    "settings": {LANG_EN: "Settings", LANG_ES: "Configuracion"},
+    "settings": {LANG_EN: "Settings", LANG_ES: "Configuración"},
     "logout": {LANG_EN: "Re-login", LANG_ES: "Log out"},
     "exit": {LANG_EN: "Exit", LANG_ES: "Salir"},
     "restore": {LANG_EN: "Restore", LANG_ES: "Restaurar"},
@@ -126,7 +126,7 @@ UI_TEXTS = {
         LANG_EN: "Show-desktop fallback (top dock): {state}",
         LANG_ES: "Fallback mostrar escritorio (dock superior): {state}",
     },
-    "tooltip_tray": {LANG_EN: "Minimize to notification area", LANG_ES: "Minimizar al area de notificacion"},
+    "tooltip_tray": {LANG_EN: "Minimize to notification area", LANG_ES: "Minimizar al área de notificación"},
     "tooltip_taskbar": {LANG_EN: "Minimize to taskbar mode", LANG_ES: "Minimizar a modo taskbar"},
     "tooltip_refresh": {LANG_EN: "Refresh now", LANG_ES: "Actualizar ahora"},
     "tooltip_exit": {LANG_EN: "Exit", LANG_ES: "Salir"},
@@ -140,8 +140,8 @@ UI_TEXTS = {
     "theme_dark": {LANG_EN: "Dark", LANG_ES: "Oscuro"},
     "theme_light": {LANG_EN: "Light", LANG_ES: "Claro"},
     "language": {LANG_EN: "Language", LANG_ES: "Idioma"},
-    "language_en": {LANG_EN: "English", LANG_ES: "Ingles"},
-    "language_es": {LANG_EN: "Spanish", LANG_ES: "Espanol"},
+    "language_en": {LANG_EN: "English", LANG_ES: "Inglés"},
+    "language_es": {LANG_EN: "Spanish", LANG_ES: "Español"},
     "interval": {LANG_EN: "Interval", LANG_ES: "Intervalo"},
     "opacity": {LANG_EN: "Opacity", LANG_ES: "Opacidad"},
     "autowidth_toggle": {LANG_EN: "Auto-width: {state} (toggle)", LANG_ES: "Auto-width: {state} (alternar)"},
@@ -175,13 +175,23 @@ UI_TEXTS = {
     "autostart_disabled": {LANG_EN: "disabled", LANG_ES: "desactivado"},
     "autostart_status": {LANG_EN: "Autostart {state}.", LANG_ES: "Autoarranque {state}."},
     "accounts_configured": {LANG_EN: "Configured accounts", LANG_ES: "Cuentas configuradas"},
-    "main_account": {LANG_EN: "Main: {path}", LANG_ES: "Principal: {path}"},
+    "main_account": {LANG_EN: "Main session: {path}", LANG_ES: "Sesión principal: {path}"},
+    "main_account_user": {LANG_EN: "Main account: {user}", LANG_ES: "Cuenta principal: {user}"},
+    "main_account_user_unknown": {
+        LANG_EN: "Main account: (could not detect username)",
+        LANG_ES: "Cuenta principal: (no se pudo detectar usuario)",
+    },
     "extra_none": {LANG_EN: "Extras: (none)", LANG_ES: "Extras: (ninguna)"},
     "extras": {LANG_EN: "Extras:", LANG_ES: "Extras:"},
+    "extra_account_with_user": {LANG_EN: "- {path} | User: {user}", LANG_ES: "- {path} | Usuario: {user}"},
+    "extra_account_no_user": {
+        LANG_EN: "- {path} | User: (unknown)",
+        LANG_ES: "- {path} | Usuario: (desconocido)",
+    },
     "add_account_title": {LANG_EN: "Add account", LANG_ES: "Agregar cuenta"},
     "add_account_prompt": {LANG_EN: "Account alias (e.g., account2):", LANG_ES: "Alias de la cuenta (ej: cuenta2):"},
     "account_added": {LANG_EN: "Account added", LANG_ES: "Cuenta agregada"},
-    "account_added_msg": {LANG_EN: "Account added to config. Restart the bar to see it in multi-account mode.", LANG_ES: "Cuenta agregada en configuracion. Reinicia la barra para verla en modo multi-cuenta."},
+    "account_added_msg": {LANG_EN: "Account added to config. Restart the bar to see it in multi-account mode.", LANG_ES: "Cuenta agregada en configuración. Reinicia la barra para verla en modo multi-cuenta."},
     "add_account_error": {LANG_EN: "Could not add account: {error}", LANG_ES: "No se pudo agregar la cuenta: {error}"},
     "remove_account_title": {LANG_EN: "Remove account", LANG_ES: "Quitar cuenta"},
     "remove_no_extra": {LANG_EN: "No extra accounts configured.", LANG_ES: "No hay cuentas extra configuradas."},
@@ -190,7 +200,7 @@ UI_TEXTS = {
     "remove_delete_file": {LANG_EN: "Also delete the .json session file?", LANG_ES: "Tambien borrar el archivo de sesion .json?"},
     "remove_failed": {LANG_EN: "Could not remove account.", LANG_ES: "No se pudo quitar la cuenta."},
     "remove_delete_failed": {LANG_EN: "Removed from config, but could not delete .json: {error}", LANG_ES: "Se quito de config, pero no se pudo borrar .json: {error}"},
-    "remove_success": {LANG_EN: "Account removed from config. Restart the bar to apply in the view.", LANG_ES: "Cuenta quitada de configuracion. Reinicia la barra para aplicar el cambio en la vista."},
+    "remove_success": {LANG_EN: "Account removed from config. Restart the bar to apply in the view.", LANG_ES: "Cuenta quitada de configuración. Reinicia la barra para aplicar el cambio en la vista."},
 }
 
 try:
@@ -1188,6 +1198,7 @@ class FloatingBarApp:
         self._show_desktop_fallback_active = False
         self._show_desktop_fallback_until_ts = 0.0
         self._desktop_foreground_ticks = 0
+        self.last_active_account_label = ""
 
         self.clients = [CopilotUsageClient(state_file=sf, headless=True) for sf in state_files]
 
@@ -1386,7 +1397,7 @@ class FloatingBarApp:
 
         self.root.bind("<Escape>", self.on_escape_key)
         self.root.report_callback_exception = self.on_tk_callback_exception
-        self.root.bind("<Button-3>", self.show_menu)
+        self.root.bind("<Button-3>", self.on_right_click)
         self.root.bind("<Configure>", self.on_resize)
         self.root.protocol("WM_DELETE_WINDOW", lambda: self.request_close(reason="wm_delete"))
 
@@ -1750,16 +1761,46 @@ class FloatingBarApp:
     def show_accounts_dialog(self) -> None:
         config = load_config(self.config_path)
         extra = parse_state_file_list(config.get("extra_state_files", ""))
-        lines = [self.tr("main_account", path=self.primary_state_file)]
+        main_login = try_get_account_from_state(self.primary_state_file)
+        if not main_login:
+            fallback_label = self.get_active_account_label_from_ui()
+            if fallback_label.startswith("@"):
+                main_login = fallback_label[1:]
+        lines = [
+            self.tr("main_account_user", user=f"@{main_login}") if main_login else self.tr("main_account_user_unknown"),
+            self.tr("main_account", path=self.primary_state_file),
+        ]
         if not extra:
             lines.append(self.tr("extra_none"))
         else:
             lines.append(self.tr("extras"))
             for item in extra:
                 login = try_get_account_from_state(item)
-                suffix = f" (@{login})" if login else ""
-                lines.append(f"- {item}{suffix}")
+                if login:
+                    lines.append(self.tr("extra_account_with_user", path=item, user=f"@{login}"))
+                else:
+                    lines.append(self.tr("extra_account_no_user", path=item))
         messagebox.showinfo(self.tr("accounts_configured"), "\n".join(lines), parent=self.root)
+
+    def get_active_account_label_from_ui(self) -> str:
+        if self.last_active_account_label:
+            return self.last_active_account_label
+
+        candidates: list[str] = []
+        try:
+            candidates.append(str(self.current_metrics_label))
+        except Exception:
+            pass
+        try:
+            candidates.append(str(self.metrics_label.cget("text")))
+        except Exception:
+            pass
+
+        for text in candidates:
+            match = re.search(r"@[a-zA-Z0-9-]{2,39}", text or "")
+            if match:
+                return match.group(0)
+        return ""
 
     def add_account_dialog(self) -> None:
         alias_raw = simpledialog.askstring(
@@ -2308,6 +2349,16 @@ class FloatingBarApp:
     def show_menu(self, event: tk.Event) -> None:
         self.popup_current_menu(event.x_root, event.y_root)
 
+    def on_right_click(self, event: tk.Event) -> str | None:
+        # En modo completo: clic derecho minimiza directo a taskbar compacto.
+        if not self.taskbar_compact_mode:
+            self.set_taskbar_compact_mode(True)
+            return "break"
+
+        # En taskbar compacto se conserva el menu contextual.
+        self.show_menu(event)
+        return "break"
+
     def on_escape_key(self, _event: tk.Event) -> None:
         # En taskbar compacto, Escape puede dispararse por foco accidental.
         if self.taskbar_compact_mode:
@@ -2358,6 +2409,8 @@ class FloatingBarApp:
             if isinstance(result, UsageSnapshot):
                 pct = max(0.0, min(100.0, result.usage_percent))
                 color = quality_color(pct)
+                if idx == 0:
+                    self.last_active_account_label = result.account_label
                 row["percent"] = pct
                 row["color"] = color
                 row["label"] = result.usage_label
@@ -2541,6 +2594,7 @@ class FloatingBarApp:
 
     def update_visuals(self, snapshot: UsageSnapshot) -> None:
         percent = max(0.0, min(100.0, snapshot.usage_percent))
+        self.last_active_account_label = snapshot.account_label
         self.current_percent = percent
         self.current_bar_label = snapshot.usage_label
         self.current_fill_color = quality_color(percent)

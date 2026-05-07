@@ -53,6 +53,8 @@ RUNTIME_LOG_MAX_BYTES = 300 * 1024
 RUNTIME_LOG_KEEP_LINES = 350
 AUTOSTART_REG_NAME = "CopilotUsageBar"
 APP_VERSION = "v1.3.1"
+LANG_EN = "en"
+LANG_ES = "es"
 
 THEME_DARK = "dark"
 THEME_LIGHT = "light"
@@ -101,6 +103,85 @@ THEME_PALETTES = {
     },
 }
 
+UI_TEXTS = {
+    "loading": {LANG_EN: "Loading...", LANG_ES: "Cargando..."},
+    "update_now": {LANG_EN: "Refresh now", LANG_ES: "Actualizar ahora"},
+    "notif_area": {LANG_EN: "Notification area", LANG_ES: "Area de notificacion"},
+    "minimize": {LANG_EN: "Minimize", LANG_ES: "Minimizar"},
+    "always_visible": {LANG_EN: "Always on top: {state}", LANG_ES: "Siempre visible: {state}"},
+    "toggle_dock_top": {LANG_EN: "Toggle top dock", LANG_ES: "Alternar dock superior"},
+    "settings": {LANG_EN: "Settings", LANG_ES: "Configuracion"},
+    "logout": {LANG_EN: "Re-login", LANG_ES: "Log out"},
+    "exit": {LANG_EN: "Exit", LANG_ES: "Salir"},
+    "restore": {LANG_EN: "Restore", LANG_ES: "Restaurar"},
+    "switch_70": {LANG_EN: "Switch to 70px", LANG_ES: "Cambiar a 70px"},
+    "switch_100": {LANG_EN: "Switch to 100px", LANG_ES: "Cambiar a 100px"},
+    "switch_150": {LANG_EN: "Switch to 150px", LANG_ES: "Cambiar a 150px"},
+    "tooltip_tray": {LANG_EN: "Minimize to notification area", LANG_ES: "Minimizar al area de notificacion"},
+    "tooltip_taskbar": {LANG_EN: "Minimize to taskbar mode", LANG_ES: "Minimizar a modo taskbar"},
+    "tooltip_refresh": {LANG_EN: "Refresh now", LANG_ES: "Actualizar ahora"},
+    "tooltip_exit": {LANG_EN: "Exit", LANG_ES: "Salir"},
+    "tooltip_menu": {LANG_EN: "Open menu", LANG_ES: "Abrir menu"},
+    "tooltip_usage": {LANG_EN: "Monthly Premium requests usage", LANG_ES: "Uso mensual del cupo de Premium requests"},
+    "tooltip_metrics": {
+        LANG_EN: "User: active GitHub account\nPace: current usage vs linear pace\nMonth: elapsed month percentage\nProj: projected month-end usage",
+        LANG_ES: "Usuario: cuenta GitHub activa\nRitmo: uso actual vs ritmo lineal\nMes: porcentaje de mes transcurrido\nProy: proyeccion al cierre",
+    },
+    "theme": {LANG_EN: "Theme", LANG_ES: "Tema"},
+    "theme_dark": {LANG_EN: "Dark", LANG_ES: "Oscuro"},
+    "theme_light": {LANG_EN: "Light", LANG_ES: "Claro"},
+    "language": {LANG_EN: "Language", LANG_ES: "Idioma"},
+    "language_en": {LANG_EN: "English", LANG_ES: "Ingles"},
+    "language_es": {LANG_EN: "Spanish", LANG_ES: "Espanol"},
+    "interval": {LANG_EN: "Interval", LANG_ES: "Intervalo"},
+    "opacity": {LANG_EN: "Opacity", LANG_ES: "Opacidad"},
+    "autowidth_toggle": {LANG_EN: "Auto-width: {state} (toggle)", LANG_ES: "Auto-width: {state} (alternar)"},
+    "set_fixed_width": {LANG_EN: "Set fixed width...", LANG_ES: "Definir ancho fijo..."},
+    "autostart_toggle": {LANG_EN: "Windows autostart: {state} (toggle)", LANG_ES: "Autoarranque Windows: {state} (alternar)"},
+    "accounts": {LANG_EN: "Accounts", LANG_ES: "Cuentas"},
+    "list_accounts": {LANG_EN: "List accounts", LANG_ES: "Listar cuentas"},
+    "add_account": {LANG_EN: "Add account...", LANG_ES: "Agregar cuenta..."},
+    "remove_account": {LANG_EN: "Remove account...", LANG_ES: "Quitar cuenta..."},
+    "restart_now": {LANG_EN: "Restart bar now", LANG_ES: "Reiniciar barra ahora"},
+    "updating": {LANG_EN: "Updating data...", LANG_ES: "Actualizando datos..."},
+    "error_prefix": {LANG_EN: "Error", LANG_ES: "Error"},
+    "error_internal_ui": {LANG_EN: "Internal UI error (see monitor_runtime.log)", LANG_ES: "Error interno UI (ver monitor_runtime.log)"},
+    "no_data": {LANG_EN: "no data", LANG_ES: "sin datos"},
+    "account_default": {LANG_EN: "Account {n}", LANG_ES: "Cuenta {n}"},
+    "accounts_ok": {LANG_EN: "{ok}/{total} accounts OK", LANG_ES: "{ok}/{total} cuentas OK"},
+    "metrics_mini": {LANG_EN: " | {account} | P:{pace:.2f}x | Month:{elapsed:.1f}%", LANG_ES: " | {account} | R:{pace:.2f}x | Mes:{elapsed:.1f}%"},
+    "metrics_full": {LANG_EN: " | {account} | Pace:{pace:.2f}x | Month:{elapsed:.1f}% | Proj:{proj:.1f}%", LANG_ES: " | {account} | Ritmo:{pace:.2f}x | Mes:{elapsed:.1f}% | Proy:{proj:.1f}%"},
+    "restart_bar_title": {LANG_EN: "Restart bar", LANG_ES: "Reiniciar barra"},
+    "restart_bar_confirm": {LANG_EN: "The bar will restart to apply changes. Continue?", LANG_ES: "Se reiniciara la barra para aplicar cambios. Continuar?"},
+    "interval_prompt": {LANG_EN: "Seconds between updates (minimum 5):", LANG_ES: "Segundos entre actualizaciones (minimo 5):"},
+    "interval_updated": {LANG_EN: "Interval updated to {value}s", LANG_ES: "Intervalo actualizado a {value}s"},
+    "opacity_prompt": {LANG_EN: "Bar opacity (0.35 to 1.0):", LANG_ES: "Opacidad de la barra (0.35 a 1.0):"},
+    "fixed_width": {LANG_EN: "Fixed width", LANG_ES: "Ancho fijo"},
+    "fixed_width_prompt": {LANG_EN: "Window width in pixels (minimum 380):", LANG_ES: "Ancho de ventana en pixeles (minimo 380):"},
+    "autostart": {LANG_EN: "Autostart", LANG_ES: "Autoarranque"},
+    "autostart_update_error": {LANG_EN: "Could not update: {error}", LANG_ES: "No se pudo actualizar: {error}"},
+    "autostart_enabled": {LANG_EN: "enabled", LANG_ES: "activado"},
+    "autostart_disabled": {LANG_EN: "disabled", LANG_ES: "desactivado"},
+    "autostart_status": {LANG_EN: "Autostart {state}.", LANG_ES: "Autoarranque {state}."},
+    "accounts_configured": {LANG_EN: "Configured accounts", LANG_ES: "Cuentas configuradas"},
+    "main_account": {LANG_EN: "Main: {path}", LANG_ES: "Principal: {path}"},
+    "extra_none": {LANG_EN: "Extras: (none)", LANG_ES: "Extras: (ninguna)"},
+    "extras": {LANG_EN: "Extras:", LANG_ES: "Extras:"},
+    "add_account_title": {LANG_EN: "Add account", LANG_ES: "Agregar cuenta"},
+    "add_account_prompt": {LANG_EN: "Account alias (e.g., account2):", LANG_ES: "Alias de la cuenta (ej: cuenta2):"},
+    "account_added": {LANG_EN: "Account added", LANG_ES: "Cuenta agregada"},
+    "account_added_msg": {LANG_EN: "Account added to config. Restart the bar to see it in multi-account mode.", LANG_ES: "Cuenta agregada en configuracion. Reinicia la barra para verla en modo multi-cuenta."},
+    "add_account_error": {LANG_EN: "Could not add account: {error}", LANG_ES: "No se pudo agregar la cuenta: {error}"},
+    "remove_account_title": {LANG_EN: "Remove account", LANG_ES: "Quitar cuenta"},
+    "remove_no_extra": {LANG_EN: "No extra accounts configured.", LANG_ES: "No hay cuentas extra configuradas."},
+    "remove_account_prompt": {LANG_EN: "Alias or path of extra account to remove:", LANG_ES: "Alias o ruta de la cuenta extra a quitar:"},
+    "remove_not_found": {LANG_EN: "That extra account was not found.", LANG_ES: "No se encontro esa cuenta extra."},
+    "remove_delete_file": {LANG_EN: "Also delete the .json session file?", LANG_ES: "Tambien borrar el archivo de sesion .json?"},
+    "remove_failed": {LANG_EN: "Could not remove account.", LANG_ES: "No se pudo quitar la cuenta."},
+    "remove_delete_failed": {LANG_EN: "Removed from config, but could not delete .json: {error}", LANG_ES: "Se quito de config, pero no se pudo borrar .json: {error}"},
+    "remove_success": {LANG_EN: "Account removed from config. Restart the bar to apply in the view.", LANG_ES: "Cuenta quitada de configuracion. Reinicia la barra para aplicar el cambio en la vista."},
+}
+
 try:
     import winreg
 except Exception:
@@ -119,150 +200,150 @@ class UsageSnapshot:
 
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Monitor de uso de GitHub Copilot (Premium requests)."
+        description="GitHub Copilot usage monitor (Premium requests)."
     )
     parser.add_argument(
         "--gui",
         action="store_true",
-        help="Inicia interfaz visual flotante (recomendado).",
+        help="Start floating visual UI (recommended).",
     )
     parser.add_argument(
         "--interval",
         type=int,
         default=None,
-        help="Segundos entre actualizaciones.",
+        help="Seconds between updates.",
     )
     parser.add_argument(
         "--opacity",
         type=float,
         default=None,
-        help="Opacidad de la barra entre 0.35 y 1.0.",
+        help="Bar opacity between 0.35 and 1.0.",
     )
     parser.add_argument(
         "--mini",
         action="store_true",
-        help="Activa modo mini (barra mas angosta).",
+        help="Enable mini mode (narrow bar).",
     )
     parser.add_argument(
         "--normal",
         action="store_true",
-        help="Fuerza modo normal (desactiva mini).",
+        help="Force normal mode (disable mini).",
     )
     parser.add_argument(
         "--dock-top",
         action="store_true",
-        help="Ancla la barra al borde superior.",
+        help="Dock the bar to the top edge.",
     )
     parser.add_argument(
         "--free-dock",
         action="store_true",
-        help="Desactiva anclado superior.",
+        help="Disable top docking.",
     )
     parser.add_argument(
         "--auto-width",
         action="store_true",
-        help="Ajusta ancho automaticamente segun contenido.",
+        help="Auto-adjust width based on content.",
     )
     parser.add_argument(
         "--fixed-width",
         action="store_true",
-        help="Desactiva ancho automatico.",
+        help="Disable auto width.",
     )
     parser.add_argument(
         "--width",
         type=int,
         default=None,
-        help="Ancho base de la barra en pixeles.",
+        help="Base bar width in pixels.",
     )
     parser.add_argument(
         "--always-on-top",
         action="store_true",
-        help="Mantiene la barra siempre por encima de otras apps.",
+        help="Keep bar always on top.",
     )
     parser.add_argument(
         "--not-always-on-top",
         action="store_true",
-        help="Desactiva modo siempre por encima.",
+        help="Disable always-on-top mode.",
     )
     parser.add_argument(
         "--taskbar-compact",
         action="store_true",
-        help="Inicia en modo compacto 150x30 (solo barra y porcentaje).",
+        help="Start in compact taskbar mode 150x30 (bar + percentage only).",
     )
     parser.add_argument(
         "--no-taskbar-compact",
         action="store_true",
-        help="Desactiva modo compacto tipo taskbar.",
+        help="Disable compact taskbar mode.",
     )
     parser.add_argument(
         "--taskbar-compact-70",
         action="store_true",
-        help="Usa variante mini de taskbar compacto (70 px de ancho).",
+        help="Use compact mini taskbar variant (70px width).",
     )
     parser.add_argument(
         "--taskbar-compact-150",
         action="store_true",
-        help="Usa variante normal de taskbar compacto (150 px de ancho).",
+        help="Use compact normal taskbar variant (150px width).",
     )
     parser.add_argument(
         "--taskbar-compact-100",
         action="store_true",
-        help="Usa variante intermedia de taskbar compacto (100 px de ancho).",
+        help="Use compact medium taskbar variant (100px width).",
     )
     parser.add_argument(
         "--state-file",
         type=Path,
         default=DEFAULT_STATE_PATH,
-        help="Archivo de sesion para evitar login en cada ejecucion.",
+        help="Session file to avoid logging in every run.",
     )
     parser.add_argument(
         "--extra-state-files",
         type=str,
         default=None,
-        help="Lista separada por ; de sesiones extra para multi-cuenta.",
+        help="Semicolon-separated list of extra session files for multi-account.",
     )
     parser.add_argument(
         "--add-account",
         type=str,
         default=None,
-        help="Agrega una cuenta extra (alias) y guarda su sesion en .auth/<alias>.json.",
+        help="Add extra account (alias) and save session to .auth/<alias>.json.",
     )
     parser.add_argument(
         "--list-accounts",
         action="store_true",
-        help="Lista las cuentas/sesiones configuradas.",
+        help="List configured accounts/sessions.",
     )
     parser.add_argument(
         "--remove-account",
         type=str,
         default=None,
-        help="Quita una cuenta extra (alias o ruta) de la configuracion.",
+        help="Remove an extra account (alias or path) from config.",
     )
     parser.add_argument(
         "--delete-state-file",
         action="store_true",
-        help="Con --remove-account, elimina tambien el archivo .json de sesion.",
+        help="With --remove-account, also delete the .json session file.",
     )
     parser.add_argument(
         "--config",
         type=Path,
         default=DEFAULT_CONFIG_PATH,
-        help="Archivo de configuracion INI.",
+        help="INI configuration file.",
     )
     parser.add_argument(
         "--login",
         action="store_true",
-        help="Fuerza un login interactivo y guarda nueva sesion.",
+        help="Force interactive login and save a new session.",
     )
     parser.add_argument(
         "--headless",
         action="store_true",
-        help="Ejecuta el monitoreo sin ventana de navegador.",
+        help="Run monitoring without a visible browser window.",
     )
     parser.add_argument(
         "--once",
         action="store_true",
-        help="Hace una sola lectura y termina.",
+        help="Run once and exit.",
     )
     return parser.parse_args()
 
@@ -288,6 +369,7 @@ always_on_top = true
 taskbar_compact_mode = false
 taskbar_compact_width = 150
 theme = dark
+language = en
 extra_state_files =
 
 [windows]
@@ -315,6 +397,7 @@ def load_config(config_path: Path) -> dict[str, str]:
         "taskbar_compact_mode": str(app.get("taskbar_compact_mode", "false")),
         "taskbar_compact_width": str(app.get("taskbar_compact_width", "150")),
         "theme": str(app.get("theme", THEME_DARK)),
+        "language": str(app.get("language", LANG_EN)),
         "extra_state_files": str(app.get("extra_state_files", "")),
         "auto_start_enabled": str(windows.get("auto_start_enabled", "false")),
     }
@@ -370,7 +453,7 @@ def is_windows_autostart_enabled() -> bool:
 
 def set_windows_autostart(enabled: bool) -> tuple[bool, str]:
     if winreg is None:
-        return False, "Autoarranque no disponible en este sistema."
+        return False, "Autostart is not available on this system."
 
     try:
         with winreg.OpenKey(
@@ -406,6 +489,13 @@ def normalize_theme(value: str | None) -> str:
     return THEME_DARK
 
 
+def normalize_language(value: str | None) -> str:
+    raw = (value or "").strip().lower()
+    if raw in {LANG_EN, LANG_ES}:
+        return raw
+    return LANG_EN
+
+
 def parse_state_file_list(raw_value: str | None) -> list[Path]:
     if not raw_value:
         return []
@@ -419,7 +509,7 @@ def stringify_state_file_list(paths: list[Path]) -> str:
 
 def sanitize_account_alias(alias: str) -> str:
     sanitized = re.sub(r"[^a-zA-Z0-9_-]", "_", alias.strip())
-    return sanitized or "cuenta"
+    return sanitized or "account"
 
 
 def upsert_extra_state_file(config_path: Path, new_state_file: Path) -> None:
@@ -513,67 +603,67 @@ def try_get_account_from_state(state_path: Path) -> str:
 
 def run_account_assistant(args: argparse.Namespace) -> int | None:
     if args.delete_state_file and not args.remove_account:
-        print("\n--delete-state-file requiere usar tambien --remove-account.")
+        print("\n--delete-state-file requires --remove-account.")
         return 1
 
     if args.add_account:
         alias = sanitize_account_alias(args.add_account)
         target_state = Path(".auth") / f"{alias}.json"
-        print(f"\nAsistente multi-cuenta: {alias}")
+        print(f"\nMulti-account assistant: {alias}")
         ensure_login_state(target_state)
         upsert_extra_state_file(args.config, target_state)
         account_login = try_get_account_from_state(target_state)
         if account_login:
-            print(f"Cuenta agregada: @{account_login}")
-        print(f"Sesion guardada en: {target_state}")
-        print("Configuracion actualizada en monitor_config.ini")
+            print(f"Account added: @{account_login}")
+        print(f"Session saved to: {target_state}")
+        print("Configuration updated in monitor_config.ini")
         return 0
 
     if args.remove_account:
         config = load_config(args.config)
         extra = parse_state_file_list(config.get("extra_state_files", ""))
         if not extra:
-            print("\nNo hay cuentas extra configuradas para quitar.")
+            print("\nNo extra accounts configured to remove.")
             return 1
 
         target = resolve_remove_target(extra, args.remove_account)
         if target is None:
-            print(f"\nNo se encontro la cuenta extra: {args.remove_account}")
-            print("Extras actuales:")
+            print(f"\nExtra account not found: {args.remove_account}")
+            print("Current extras:")
             for item in extra:
                 print(f"- {item}")
             return 1
 
         removed = remove_extra_state_file(args.config, target)
         if not removed:
-            print(f"\nNo se pudo quitar la cuenta: {target}")
+            print(f"\nCould not remove account: {target}")
             return 1
 
         login = try_get_account_from_state(target)
         suffix = f" (@{login})" if login else ""
-        print(f"\nCuenta extra quitada: {target}{suffix}")
+        print(f"\nExtra account removed: {target}{suffix}")
 
         if args.delete_state_file:
             try:
                 if target.exists():
                     target.unlink()
-                    print("Tambien se elimino el archivo de sesion.")
+                    print("Session file deleted as well.")
                 else:
-                    print("El archivo de sesion ya no existia en disco.")
+                    print("Session file no longer existed on disk.")
             except OSError as exc:
-                print(f"No se pudo eliminar el archivo de sesion: {exc}")
+                print(f"Could not delete session file: {exc}")
                 return 1
         else:
-            print("Solo se quito de la configuracion. El archivo de sesion no se elimino.")
+            print("Removed from config only. Session file was not deleted.")
         return 0
 
     if args.list_accounts:
         config = load_config(args.config)
         extra = parse_state_file_list(config.get("extra_state_files", ""))
-        print("\nCuentas configuradas:")
-        print(f"- Principal: {args.state_file}")
+        print("\nConfigured accounts:")
+        print(f"- Main: {args.state_file}")
         if not extra:
-            print("- Extras: (ninguna)")
+            print("- Extras: (none)")
         else:
             for item in extra:
                 login = try_get_account_from_state(item)
@@ -584,7 +674,7 @@ def run_account_assistant(args: argparse.Namespace) -> int | None:
     return None
 
 
-def resolve_settings(args: argparse.Namespace) -> tuple[int, bool, float, bool, bool, int, bool, bool, int, str, list[Path]]:
+def resolve_settings(args: argparse.Namespace) -> tuple[int, bool, float, bool, bool, int, bool, bool, int, str, str, list[Path]]:
     config = load_config(args.config)
 
     interval = args.interval
@@ -639,6 +729,7 @@ def resolve_settings(args: argparse.Namespace) -> tuple[int, bool, float, bool, 
         taskbar_compact_width = 150
 
     theme = normalize_theme(config.get("theme", THEME_DARK))
+    language = normalize_language(config.get("language", LANG_EN))
 
     extra_state_files = parse_state_file_list(config["extra_state_files"])
     if args.extra_state_files is not None:
@@ -655,6 +746,7 @@ def resolve_settings(args: argparse.Namespace) -> tuple[int, bool, float, bool, 
         taskbar_compact_mode,
         taskbar_compact_width,
         theme,
+        language,
         extra_state_files,
     )
 
@@ -701,7 +793,7 @@ def try_signal_existing_instance() -> bool:
         log_single_instance_event("SHOW enviado a instancia existente")
         return True
     except OSError:
-        log_single_instance_event("No se pudo enviar SHOW (no habia instancia escuchando)")
+        log_single_instance_event("Could not send SHOW (no listening instance)")
         return False
 
 
@@ -715,7 +807,7 @@ def create_single_instance_server() -> socket.socket | None:
         log_single_instance_event("Servidor de instancia unica iniciado")
         return server
     except OSError:
-        log_single_instance_event("No se pudo iniciar servidor de instancia unica")
+        log_single_instance_event("Could not start single-instance server")
         return None
 
 
@@ -742,7 +834,7 @@ def extract_usage_percent(main_text: str) -> tuple[float, str]:
         value = normalize_decimal(fallback.group(1))
         return value, f"{value:.1f}%"
 
-    raise ValueError("No se encontro un porcentaje de uso en la pagina.")
+    raise ValueError("Could not find usage percentage in the page.")
 
 
 def extract_plan_status(main_text: str) -> str:
@@ -767,7 +859,7 @@ def extract_reset_note(main_text: str) -> str:
         match = re.search(pattern, main_text, flags=re.IGNORECASE)
         if match:
             return match.group(1).strip()
-    return "No se detecto nota de reinicio mensual"
+    return "Monthly reset note not detected"
 
 
 def extract_account_label(main_text: str, page_html: str) -> str:
@@ -785,7 +877,7 @@ def extract_account_label(main_text: str, page_html: str) -> str:
     if text_match:
         return "@" + text_match.group(1).strip()
 
-    return "@cuenta-desconocida"
+    return "@unknown-account"
 
 
 def progress_bar(percent: float, width: int = 32) -> str:
@@ -825,7 +917,7 @@ def read_snapshot(page) -> UsageSnapshot:
         "Inicia sesion en GitHub",
     )
     if any(marker.lower() in text.lower() for marker in login_markers):
-        raise PermissionError("Sesion no valida. Ejecuta con --login para autenticar.")
+        raise PermissionError("Invalid session. Run with --login to authenticate.")
 
     usage_percent, usage_label = extract_usage_percent(text)
 
@@ -843,14 +935,14 @@ def print_snapshot(snapshot: UsageSnapshot) -> None:
     elapsed_percent, pace_ratio, projected_end_month = month_metrics(snapshot.usage_percent)
 
     print("\n" + "=" * 72)
-    print(f"Actualizado: {snapshot.fetched_at:%Y-%m-%d %H:%M:%S}")
-    print(f"Uso mensual Premium: {snapshot.usage_label}")
+    print(f"Updated: {snapshot.fetched_at:%Y-%m-%d %H:%M:%S}")
+    print(f"Premium monthly usage: {snapshot.usage_label}")
     print(progress_bar(snapshot.usage_percent), snapshot.usage_label)
-    print(f"Ritmo del mes: {pace_ratio:.2f}x del ritmo lineal")
-    print(f"Mes transcurrido: {elapsed_percent:.1f}%")
-    print(f"Proyeccion al cierre (si mantienes ritmo): {projected_end_month:.1f}%")
+    print(f"Month pace: {pace_ratio:.2f}x of linear pace")
+    print(f"Month elapsed: {elapsed_percent:.1f}%")
+    print(f"Projected month-end (if pace holds): {projected_end_month:.1f}%")
     print(f"Plan: {snapshot.plan_status}")
-    print(f"Nota: {snapshot.reset_note}")
+    print(f"Note: {snapshot.reset_note}")
     print("=" * 72)
 
 
@@ -863,10 +955,10 @@ def ensure_login_state(state_file: Path) -> None:
         page = context.new_page()
         page.goto(GITHUB_FEATURES_URL, wait_until="domcontentloaded", timeout=45000)
 
-        print("\nLogin interactivo requerido.")
-        print("1) Completa login/2FA en la ventana del navegador.")
-        print("2) Cuando se abra Copilot Features, la sesion se guardara sola.")
-        print("3) Deja esta ventana abierta hasta ver el mensaje de sesion guardada.")
+        print("\nInteractive login required.")
+        print("1) Complete login/2FA in the browser window.")
+        print("2) Once Copilot Features opens, session state is saved automatically.")
+        print("3) Keep this window open until you see the saved-session message.")
 
         deadline = dt.datetime.now() + dt.timedelta(minutes=10)
         while dt.datetime.now() < deadline:
@@ -878,13 +970,13 @@ def ensure_login_state(state_file: Path) -> None:
 
             if "premium requests" in text or "solicitudes premium" in text:
                 context.storage_state(path=str(state_file))
-                print("Sesion guardada correctamente.")
+                print("Session saved successfully.")
                 browser.close()
                 return
 
         browser.close()
         raise TimeoutError(
-            "No se detecto la pagina de Copilot Features dentro del tiempo esperado."
+            "Copilot Features page was not detected within the expected time."
         )
 
 
@@ -905,7 +997,7 @@ class CopilotUsageClient:
 
     def fetch_snapshot(self) -> UsageSnapshot:
         if self._page is None:
-            raise RuntimeError("Cliente no inicializado.")
+            raise RuntimeError("Client not initialized.")
         return read_snapshot(self._page)
 
     def close(self) -> None:
@@ -942,6 +1034,9 @@ class Tooltip:
         self.bg = bg
         self.fg = fg
         self.border = border
+
+    def set_text(self, text: str) -> None:
+        self.text = text
 
     def on_enter(self, _event) -> None:
         self.after_id = self.widget.after(self.delay_ms, self.show)
@@ -997,6 +1092,7 @@ class FloatingBarApp:
         taskbar_compact_mode: bool,
         taskbar_compact_width: int,
         theme: str,
+        language: str,
         single_instance_server: socket.socket | None,
         config_path: Path,
     ) -> None:
@@ -1014,6 +1110,7 @@ class FloatingBarApp:
         self.taskbar_compact_mode = taskbar_compact_mode
         self.taskbar_compact_width = normalize_taskbar_width(taskbar_compact_width)
         self.theme = normalize_theme(theme)
+        self.language = normalize_language(language)
         self.theme_colors = THEME_PALETTES[self.theme]
         self.single_instance_server = single_instance_server
         self.config_path = config_path
@@ -1023,7 +1120,7 @@ class FloatingBarApp:
         self.current_percent = 0.0
         self.current_bar_label = "--.-%"
         self.current_fill_color = "#12b886"
-        self.current_metrics_label = "Cargando..."
+        self.current_metrics_label = self.tr("loading")
         self.last_non_compact_geometry = None
         self.restore_geometry: tuple[int, int, int] | None = None
         self.last_normal_x = 60
@@ -1037,6 +1134,7 @@ class FloatingBarApp:
 
         self.root = tk.Tk()
         self.theme_var = tk.StringVar(value=self.theme)
+        self.language_var = tk.StringVar(value=self.language)
         self.root.title("Copilot Usage Bar")
         self.window_height = 60
         self.root.geometry(f"{self.window_width}x{self.window_height}+60+60")
@@ -1094,7 +1192,7 @@ class FloatingBarApp:
 
         self.metrics_label = tk.Label(
             header,
-            text=" | Cargando...",
+            text=f" | {self.tr('loading')}",
             fg="#9fb3c8",
             bg="#101113",
             font=("Segoe UI", 7 if self.mini_mode else 8),
@@ -1233,54 +1331,8 @@ class FloatingBarApp:
         self.root.bind("<Configure>", self.on_resize)
         self.root.protocol("WM_DELETE_WINDOW", lambda: self.close(reason="wm_delete"))
 
-        self.menu_full = tk.Menu(self.root, tearoff=0)
-        self.menu_full.add_command(label="Actualizar ahora", command=self.refresh_now)
-
-        self.menu_minimize = tk.Menu(self.menu_full, tearoff=0)
-        self.menu_minimize.add_command(label="Area de notificacion", command=self.minimize_to_tray)
-        self.menu_minimize.add_separator()
-        self.menu_minimize.add_command(
-            label="Taskbar 70px",
-            command=lambda: self.activate_taskbar_compact_width(70),
-        )
-        self.menu_minimize.add_command(
-            label="Taskbar 100px",
-            command=lambda: self.activate_taskbar_compact_width(100),
-        )
-        self.menu_minimize.add_command(
-            label="Taskbar 150px",
-            command=lambda: self.activate_taskbar_compact_width(150),
-        )
-        self.menu_full.add_cascade(label="Minimizar", menu=self.menu_minimize)
-
-        self.menu_always_on_top_index = self.menu_full.index("end") + 1
-        self.menu_full.add_command(label="Siempre visible: ON", command=self.toggle_always_on_top)
-        self.menu_full.add_command(label="Alternar dock superior", command=self.toggle_dock_top)
-        self.menu_settings = tk.Menu(self.menu_full, tearoff=0)
-        self.menu_full.add_cascade(label="Configuracion", menu=self.menu_settings)
-        self.menu_full.add_command(label="Log out", command=self.relogin)
-        self.menu_full.add_separator()
-        self.menu_full.add_command(label="Salir", command=self.close)
-
-        self.menu_taskbar = tk.Menu(self.root, tearoff=0)
-        self.menu_taskbar.add_command(label="Restaurar", command=self.restore_from_taskbar_compact)
-        self.menu_taskbar.add_command(label="Cambiar a 70px", command=lambda: self.activate_taskbar_compact_width(70))
-        self.menu_taskbar.add_command(label="Cambiar a 100px", command=lambda: self.activate_taskbar_compact_width(100))
-        self.menu_taskbar.add_command(label="Cambiar a 150px", command=lambda: self.activate_taskbar_compact_width(150))
-        self.menu_taskbar.add_command(label="Salir", command=self.close)
-
-        self.tooltips = [
-            Tooltip(self.tray_button, "Minimizar al area de notificacion"),
-            Tooltip(self.taskbar_button, "Minimizar a modo taskbar"),
-            Tooltip(self.refresh_button, "Actualizar ahora"),
-            Tooltip(self.close_button, "Salir"),
-            Tooltip(self.menu_button, "Abrir menu"),
-            Tooltip(self.percent_label, "Uso mensual del cupo de Premium requests"),
-            Tooltip(
-            self.metrics_label,
-            "Usuario: cuenta GitHub activa\nRitmo: uso actual vs ritmo lineal\nMes: porcentaje de mes transcurrido\nProy: proyeccion al cierre",
-            ),
-        ]
+        self.build_menus()
+        self.build_tooltips()
 
         self.apply_theme()
 
@@ -1297,7 +1349,77 @@ class FloatingBarApp:
 
     def refresh_menu_state_labels(self) -> None:
         state = "ON" if self.always_on_top else "OFF"
-        self.menu_full.entryconfig(self.menu_always_on_top_index, label=f"Siempre visible: {state}")
+        self.menu_full.entryconfig(self.menu_always_on_top_index, label=self.tr("always_visible", state=state))
+
+    def tr(self, key: str, **kwargs) -> str:
+        translations = UI_TEXTS.get(key, {})
+        text = translations.get(self.language) or translations.get(LANG_EN) or key
+        if kwargs:
+            return text.format(**kwargs)
+        return text
+
+    def build_menus(self) -> None:
+        self.menu_full = tk.Menu(self.root, tearoff=0)
+        self.menu_full.add_command(label=self.tr("update_now"), command=self.refresh_now)
+
+        self.menu_minimize = tk.Menu(self.menu_full, tearoff=0)
+        self.menu_minimize.add_command(label=self.tr("notif_area"), command=self.minimize_to_tray)
+        self.menu_minimize.add_separator()
+        self.menu_minimize.add_command(label="Taskbar 70px", command=lambda: self.activate_taskbar_compact_width(70))
+        self.menu_minimize.add_command(label="Taskbar 100px", command=lambda: self.activate_taskbar_compact_width(100))
+        self.menu_minimize.add_command(label="Taskbar 150px", command=lambda: self.activate_taskbar_compact_width(150))
+        self.menu_full.add_cascade(label=self.tr("minimize"), menu=self.menu_minimize)
+
+        self.menu_always_on_top_index = self.menu_full.index("end") + 1
+        self.menu_full.add_command(label=self.tr("always_visible", state="ON"), command=self.toggle_always_on_top)
+        self.menu_full.add_command(label=self.tr("toggle_dock_top"), command=self.toggle_dock_top)
+        self.menu_settings = tk.Menu(self.menu_full, tearoff=0)
+        self.menu_full.add_cascade(label=self.tr("settings"), menu=self.menu_settings)
+        self.menu_full.add_command(label=self.tr("logout"), command=self.relogin)
+        self.menu_full.add_separator()
+        self.menu_full.add_command(label=self.tr("exit"), command=lambda: self.close(reason="full_menu"))
+
+        self.menu_taskbar = tk.Menu(self.root, tearoff=0)
+        self.menu_taskbar.add_command(label=self.tr("restore"), command=self.restore_from_taskbar_compact)
+        self.menu_taskbar.add_command(label=self.tr("switch_70"), command=lambda: self.activate_taskbar_compact_width(70))
+        self.menu_taskbar.add_command(label=self.tr("switch_100"), command=lambda: self.activate_taskbar_compact_width(100))
+        self.menu_taskbar.add_command(label=self.tr("switch_150"), command=lambda: self.activate_taskbar_compact_width(150))
+        self.menu_taskbar.add_command(label=self.tr("exit"), command=lambda: self.close(reason="taskbar_menu"))
+
+    def build_tooltips(self) -> None:
+        self.tooltips = [
+            Tooltip(self.tray_button, self.tr("tooltip_tray")),
+            Tooltip(self.taskbar_button, self.tr("tooltip_taskbar")),
+            Tooltip(self.refresh_button, self.tr("tooltip_refresh")),
+            Tooltip(self.close_button, self.tr("tooltip_exit")),
+            Tooltip(self.menu_button, self.tr("tooltip_menu")),
+            Tooltip(self.percent_label, self.tr("tooltip_usage")),
+            Tooltip(self.metrics_label, self.tr("tooltip_metrics")),
+        ]
+
+    def set_language(self, language: str) -> None:
+        normalized = normalize_language(language)
+        if normalized == self.language:
+            return
+        self.language = normalized
+        self.language_var.set(self.language)
+        self.build_menus()
+        self.rebuild_settings_menu()
+        self.refresh_menu_state_labels()
+
+        tooltips = [
+            self.tr("tooltip_tray"),
+            self.tr("tooltip_taskbar"),
+            self.tr("tooltip_refresh"),
+            self.tr("tooltip_exit"),
+            self.tr("tooltip_menu"),
+            self.tr("tooltip_usage"),
+            self.tr("tooltip_metrics"),
+        ]
+        for tip, text in zip(self.tooltips, tooltips):
+            tip.set_text(text)
+
+        self.persist_runtime_config()
 
     def apply_theme(self) -> None:
         self.theme_colors = THEME_PALETTES[self.theme]
@@ -1329,7 +1451,7 @@ class FloatingBarApp:
         self.canvas.itemconfig(self.bar_text, fill=c["bar_text"])
         self.canvas.itemconfig(self.compact_refresh_icon, fill=c["refresh"])
 
-        if self.current_percent <= 0.0 and self.current_bar_label == "sin datos":
+        if self.current_percent <= 0.0 and self.current_bar_label == self.tr("no_data"):
             self.current_fill_color = c["track"]
 
         for row in self.multi_rows:
@@ -1379,58 +1501,77 @@ class FloatingBarApp:
                 "taskbar_compact_mode": "true" if self.taskbar_compact_mode else "false",
                 "taskbar_compact_width": str(self.taskbar_compact_width),
                 "theme": self.theme,
+                "language": self.language,
                 "extra_state_files": stringify_state_file_list(extra_files),
             },
         )
 
     def rebuild_settings_menu(self) -> None:
         self.menu_settings.delete(0, "end")
-        self.menu_settings.add_command(label=f"Intervalo ({self.interval_s}s)...", command=self.configure_interval)
-        self.menu_settings.add_command(label=f"Opacidad ({self.opacity:.2f})...", command=self.configure_opacity)
+        self.menu_settings.add_command(label=f"{self.tr('interval')} ({self.interval_s}s)...", command=self.configure_interval)
+        self.menu_settings.add_command(label=f"{self.tr('opacity')} ({self.opacity:.2f})...", command=self.configure_opacity)
+
+        language_menu = tk.Menu(self.menu_settings, tearoff=0)
+        self.language_var.set(self.language)
+        language_menu.add_radiobutton(
+            label=self.tr("language_en"),
+            value=LANG_EN,
+            variable=self.language_var,
+            command=lambda: self.set_language(LANG_EN),
+        )
+        language_menu.add_radiobutton(
+            label=self.tr("language_es"),
+            value=LANG_ES,
+            variable=self.language_var,
+            command=lambda: self.set_language(LANG_ES),
+        )
+        current_lang_label = self.tr("language_en") if self.language == LANG_EN else self.tr("language_es")
+        self.menu_settings.add_cascade(label=f"{self.tr('language')}: {current_lang_label}", menu=language_menu)
+
         theme_menu = tk.Menu(self.menu_settings, tearoff=0)
         self.theme_var.set(self.theme)
         theme_menu.add_radiobutton(
-            label="Oscuro",
+            label=self.tr("theme_dark"),
             value=THEME_DARK,
             variable=self.theme_var,
             command=lambda: self.set_theme(THEME_DARK),
         )
         theme_menu.add_radiobutton(
-            label="Claro",
+            label=self.tr("theme_light"),
             value=THEME_LIGHT,
             variable=self.theme_var,
             command=lambda: self.set_theme(THEME_LIGHT),
         )
         self.menu_settings.add_cascade(
-            label=f"Tema: {'Claro' if self.theme == THEME_LIGHT else 'Oscuro'}",
+            label=f"{self.tr('theme')}: {self.tr('theme_light') if self.theme == THEME_LIGHT else self.tr('theme_dark')}",
             menu=theme_menu,
         )
         self.menu_settings.add_command(
-            label=f"Auto-width: {'ON' if self.auto_width else 'OFF'} (alternar)",
+            label=self.tr("autowidth_toggle", state=("ON" if self.auto_width else "OFF")),
             command=self.toggle_auto_width,
         )
-        self.menu_settings.add_command(label="Definir ancho fijo...", command=self.configure_fixed_width)
+        self.menu_settings.add_command(label=self.tr("set_fixed_width"), command=self.configure_fixed_width)
         self.menu_settings.add_separator()
 
         autostart_enabled = is_windows_autostart_enabled()
         self.menu_settings.add_command(
-            label=f"Autoarranque Windows: {'ON' if autostart_enabled else 'OFF'} (alternar)",
+            label=self.tr("autostart_toggle", state=("ON" if autostart_enabled else "OFF")),
             command=self.toggle_windows_autostart,
         )
         self.menu_settings.add_separator()
 
         accounts_menu = tk.Menu(self.menu_settings, tearoff=0)
-        accounts_menu.add_command(label="Listar cuentas", command=self.show_accounts_dialog)
-        accounts_menu.add_command(label="Agregar cuenta...", command=self.add_account_dialog)
-        accounts_menu.add_command(label="Quitar cuenta...", command=self.remove_account_dialog)
-        self.menu_settings.add_cascade(label="Cuentas", menu=accounts_menu)
+        accounts_menu.add_command(label=self.tr("list_accounts"), command=self.show_accounts_dialog)
+        accounts_menu.add_command(label=self.tr("add_account"), command=self.add_account_dialog)
+        accounts_menu.add_command(label=self.tr("remove_account"), command=self.remove_account_dialog)
+        self.menu_settings.add_cascade(label=self.tr("accounts"), menu=accounts_menu)
         self.menu_settings.add_separator()
-        self.menu_settings.add_command(label="Reiniciar barra ahora", command=self.restart_bar_now)
+        self.menu_settings.add_command(label=self.tr("restart_now"), command=self.restart_bar_now)
 
     def restart_bar_now(self) -> None:
         if not messagebox.askyesno(
-            "Reiniciar barra",
-            "Se reiniciara la barra para aplicar cambios. Continuar?",
+            self.tr("restart_bar_title"),
+            self.tr("restart_bar_confirm"),
             parent=self.root,
         ):
             return
@@ -1470,8 +1611,8 @@ class FloatingBarApp:
 
     def configure_interval(self) -> None:
         value = simpledialog.askinteger(
-            "Intervalo",
-            "Segundos entre actualizaciones (minimo 5):",
+            self.tr("interval"),
+            self.tr("interval_prompt"),
             initialvalue=self.interval_s,
             minvalue=5,
             parent=self.root,
@@ -1481,12 +1622,12 @@ class FloatingBarApp:
         self.interval_s = max(5, int(value))
         self.persist_runtime_config()
         self.rebuild_settings_menu()
-        self.metrics_label.config(text=f" | Intervalo actualizado a {self.interval_s}s")
+        self.metrics_label.config(text=f" | {self.tr('interval_updated', value=self.interval_s)}")
 
     def configure_opacity(self) -> None:
         value = simpledialog.askfloat(
-            "Opacidad",
-            "Opacidad de la barra (0.35 a 1.0):",
+            self.tr("opacity"),
+            self.tr("opacity_prompt"),
             initialvalue=self.opacity,
             minvalue=0.35,
             maxvalue=1.0,
@@ -1508,8 +1649,8 @@ class FloatingBarApp:
 
     def configure_fixed_width(self) -> None:
         value = simpledialog.askinteger(
-            "Ancho fijo",
-            "Ancho de ventana en pixeles (minimo 380):",
+            self.tr("fixed_width"),
+            self.tr("fixed_width_prompt"),
             initialvalue=self.normal_window_width,
             minvalue=380,
             parent=self.root,
@@ -1525,7 +1666,7 @@ class FloatingBarApp:
         target = not is_windows_autostart_enabled()
         ok, error_message = set_windows_autostart(target)
         if not ok:
-            messagebox.showerror("Autoarranque", f"No se pudo actualizar: {error_message}", parent=self.root)
+            messagebox.showerror(self.tr("autostart"), self.tr("autostart_update_error", error=error_message), parent=self.root)
             return
 
         update_config_values(
@@ -1533,27 +1674,27 @@ class FloatingBarApp:
             windows_updates={"auto_start_enabled": "true" if target else "false"},
         )
         self.rebuild_settings_menu()
-        state_label = "activado" if target else "desactivado"
-        messagebox.showinfo("Autoarranque", f"Autoarranque {state_label}.", parent=self.root)
+        state_label = self.tr("autostart_enabled") if target else self.tr("autostart_disabled")
+        messagebox.showinfo(self.tr("autostart"), self.tr("autostart_status", state=state_label), parent=self.root)
 
     def show_accounts_dialog(self) -> None:
         config = load_config(self.config_path)
         extra = parse_state_file_list(config.get("extra_state_files", ""))
-        lines = [f"Principal: {self.primary_state_file}"]
+        lines = [self.tr("main_account", path=self.primary_state_file)]
         if not extra:
-            lines.append("Extras: (ninguna)")
+            lines.append(self.tr("extra_none"))
         else:
-            lines.append("Extras:")
+            lines.append(self.tr("extras"))
             for item in extra:
                 login = try_get_account_from_state(item)
                 suffix = f" (@{login})" if login else ""
                 lines.append(f"- {item}{suffix}")
-        messagebox.showinfo("Cuentas configuradas", "\n".join(lines), parent=self.root)
+        messagebox.showinfo(self.tr("accounts_configured"), "\n".join(lines), parent=self.root)
 
     def add_account_dialog(self) -> None:
         alias_raw = simpledialog.askstring(
-            "Agregar cuenta",
-            "Alias de la cuenta (ej: cuenta2):",
+            self.tr("add_account_title"),
+            self.tr("add_account_prompt"),
             parent=self.root,
         )
         if not alias_raw:
@@ -1565,23 +1706,23 @@ class FloatingBarApp:
             ensure_login_state(target_state)
             upsert_extra_state_file(self.config_path, target_state)
             messagebox.showinfo(
-                "Cuenta agregada",
-                "Cuenta agregada en configuracion. Reinicia la barra para verla en modo multi-cuenta.",
+                self.tr("account_added"),
+                self.tr("account_added_msg"),
                 parent=self.root,
             )
         except Exception as exc:  # pylint: disable=broad-except
-            messagebox.showerror("Agregar cuenta", f"No se pudo agregar la cuenta: {exc}", parent=self.root)
+            messagebox.showerror(self.tr("add_account_title"), self.tr("add_account_error", error=exc), parent=self.root)
 
     def remove_account_dialog(self) -> None:
         config = load_config(self.config_path)
         extra = parse_state_file_list(config.get("extra_state_files", ""))
         if not extra:
-            messagebox.showinfo("Quitar cuenta", "No hay cuentas extra configuradas.", parent=self.root)
+            messagebox.showinfo(self.tr("remove_account_title"), self.tr("remove_no_extra"), parent=self.root)
             return
 
         alias_raw = simpledialog.askstring(
-            "Quitar cuenta",
-            "Alias o ruta de la cuenta extra a quitar:",
+            self.tr("remove_account_title"),
+            self.tr("remove_account_prompt"),
             parent=self.root,
         )
         if not alias_raw:
@@ -1589,30 +1730,30 @@ class FloatingBarApp:
 
         target = resolve_remove_target(extra, alias_raw)
         if target is None:
-            messagebox.showerror("Quitar cuenta", "No se encontro esa cuenta extra.", parent=self.root)
+            messagebox.showerror(self.tr("remove_account_title"), self.tr("remove_not_found"), parent=self.root)
             return
 
         delete_file = messagebox.askyesno(
-            "Quitar cuenta",
-            "Tambien borrar el archivo de sesion .json?",
+            self.tr("remove_account_title"),
+            self.tr("remove_delete_file"),
             parent=self.root,
         )
 
         removed = remove_extra_state_file(self.config_path, target)
         if not removed:
-            messagebox.showerror("Quitar cuenta", "No se pudo quitar la cuenta.", parent=self.root)
+            messagebox.showerror(self.tr("remove_account_title"), self.tr("remove_failed"), parent=self.root)
             return
 
         if delete_file and target.exists():
             try:
                 target.unlink()
             except OSError as exc:
-                messagebox.showerror("Quitar cuenta", f"Se quito de config, pero no se pudo borrar .json: {exc}", parent=self.root)
+                messagebox.showerror(self.tr("remove_account_title"), self.tr("remove_delete_failed", error=exc), parent=self.root)
                 return
 
         messagebox.showinfo(
-            "Quitar cuenta",
-            "Cuenta quitada de configuracion. Reinicia la barra para aplicar el cambio en la vista.",
+            self.tr("remove_account_title"),
+            self.tr("remove_success"),
             parent=self.root,
         )
 
@@ -1628,7 +1769,7 @@ class FloatingBarApp:
 
             account_label = tk.Label(
                 row,
-                text=f"Cuenta {index + 1}",
+                text=self.tr("account_default", n=index + 1),
                 fg="#9fb3c8",
                 bg="#101113",
                 font=("Segoe UI", 8),
@@ -1996,10 +2137,10 @@ class FloatingBarApp:
     def relogin(self) -> None:
         try:
             ensure_login_state(self.primary_state_file)
-            self.metrics_label.config(text=" | Sesion actualizada")
+            self.metrics_label.config(text=f" | {self.tr('session_updated')}")
             self.refresh_now()
         except Exception as exc:  # pylint: disable=broad-except
-            self.metrics_label.config(text=f" | Error login: {exc}")
+            self.metrics_label.config(text=f" | Login error: {exc}")
 
     def update_compact_from_active_row(self) -> None:
         if not self.multi_rows:
@@ -2027,10 +2168,10 @@ class FloatingBarApp:
                 row["percent"] = 0.0
                 row["color"] = self.theme_colors["error"]
                 row["label"] = "ERR"
-                row["account_label"].config(text=f"Cuenta {idx + 1}")
+                row["account_label"].config(text=self.tr("account_default", n=idx + 1))
                 row["pct_label"].config(text="ERR", fg=self.theme_colors["error"])
 
-        self.metrics_label.config(text=f" | {ok_count}/{len(snapshots)} cuentas OK")
+        self.metrics_label.config(text=f" | {self.tr('accounts_ok', ok=ok_count, total=len(snapshots))}")
         self.on_resize(None)
         if self.taskbar_compact_mode:
             self.update_compact_from_active_row()
@@ -2127,13 +2268,19 @@ class FloatingBarApp:
 
         self.percent_label.config(text=snapshot.usage_label, fg=color)
         if self.mini_mode:
-            self.current_metrics_label = (
-                f" | {snapshot.account_label} | R:{pace_ratio:.2f}x | Mes:{elapsed_percent:.1f}%"
+            self.current_metrics_label = self.tr(
+                "metrics_mini",
+                account=snapshot.account_label,
+                pace=pace_ratio,
+                elapsed=elapsed_percent,
             )
         else:
-            self.current_metrics_label = (
-                f" | {snapshot.account_label} | Ritmo:{pace_ratio:.2f}x | Mes:{elapsed_percent:.1f}% | "
-                f"Proy:{projected_end_month:.1f}%"
+            self.current_metrics_label = self.tr(
+                "metrics_full",
+                account=snapshot.account_label,
+                pace=pace_ratio,
+                elapsed=elapsed_percent,
+                proj=projected_end_month,
             )
         self.metrics_label.config(text=self.current_metrics_label)
 
@@ -2149,22 +2296,22 @@ class FloatingBarApp:
 
     def set_error_state(self, message: str) -> None:
         self.current_percent = 0.0
-        self.current_bar_label = "sin datos"
+        self.current_bar_label = self.tr("no_data")
         self.current_fill_color = self.theme_colors["track"]
         self.percent_label.config(text="ERR", fg=self.theme_colors["error"])
-        self.current_metrics_label = f" | Error: {message}"
+        self.current_metrics_label = f" | {self.tr('error_prefix')}: {message}"
         self.metrics_label.config(text=self.current_metrics_label)
         w = max(80, self.canvas.winfo_width())
         h = max(12, self.canvas.winfo_height())
         self.canvas.coords(self.fill, 0, 0, 0, h)
         self.canvas.coords(self.bar_text, w / 2, h / 2)
-        self.canvas.itemconfig(self.bar_text, text="sin datos")
+        self.canvas.itemconfig(self.bar_text, text=self.tr("no_data"))
         self.update_width_for_content()
 
     def refresh_now(self) -> None:
         if self.closed:
             return
-        self.metrics_label.config(text=" | Actualizando datos...")
+        self.metrics_label.config(text=f" | {self.tr('updating')}")
         if self.multi_mode:
             snapshots: list[UsageSnapshot | Exception] = []
             for client in self.clients:
@@ -2189,16 +2336,16 @@ class FloatingBarApp:
 
     def on_tk_callback_exception(self, exc_type: type, exc_value: BaseException, exc_tb: object) -> None:
         trace = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
-        log_runtime_event(f"Excepcion en callback Tk:\n{trace}")
+        log_runtime_event(f"Tk callback exception:\n{trace}")
         try:
-            self.metrics_label.config(text=" | Error interno UI (ver monitor_runtime.log)")
+            self.metrics_label.config(text=f" | {self.tr('error_internal_ui')}")
         except Exception:
             pass
 
     def close(self, reason: str = "unknown") -> None:
         if self.closed:
             return
-        log_runtime_event(f"Cierre solicitado: {reason}")
+        log_runtime_event(f"Close requested: {reason}")
         self.closed = True
         self._stop_tray()
         if self.single_instance_server is not None:
@@ -2225,9 +2372,9 @@ class FloatingBarApp:
         self.root.after(120, self.refresh_now)
         self.root.after(self.interval_s * 1000, self.periodic_refresh)
         self.root.mainloop()
-        log_runtime_event("Mainloop finalizado")
+        log_runtime_event("Mainloop finished")
         if not self.closed:
-            log_runtime_event("Salida inesperada de mainloop (sin cierre explicito)")
+            log_runtime_event("Unexpected mainloop exit (without explicit close)")
             self.close(reason="unexpected_mainloop_exit")
             return 2
         return 0
@@ -2238,8 +2385,8 @@ def run_monitor(args: argparse.Namespace) -> int:
         try:
             ensure_login_state(args.state_file)
         except PlaywrightError:
-            print("No se pudo abrir Chromium de Playwright.")
-            print("Ejecuta: python -m playwright install chromium")
+            print("Could not open Playwright Chromium.")
+            print("Run: python -m playwright install chromium")
             return 1
 
     (
@@ -2253,6 +2400,7 @@ def run_monitor(args: argparse.Namespace) -> int:
         taskbar_compact_mode,
         taskbar_compact_width,
         theme,
+        language,
         extra_state_files,
     ) = resolve_settings(args)
 
@@ -2285,13 +2433,14 @@ def run_monitor(args: argparse.Namespace) -> int:
                 taskbar_compact_mode=taskbar_compact_mode,
                 taskbar_compact_width=taskbar_compact_width,
                 theme=theme,
+                language=language,
                 single_instance_server=instance_server,
                 config_path=args.config,
             )
             result = app.run()
             if result != 2:
                 return result
-            log_runtime_event(f"Reinicio automatico tras salida inesperada (intento {attempt + 1}/1)")
+            log_runtime_event(f"Automatic restart after unexpected exit (attempt {attempt + 1}/1)")
 
         return 1
 
@@ -2306,8 +2455,8 @@ def run_monitor(args: argparse.Namespace) -> int:
                 print_snapshot(snapshot)
             except (PermissionError, ValueError, PlaywrightTimeoutError, PlaywrightError) as exc:
                 print("\n" + "!" * 72)
-                print(f"Error al leer uso de Copilot: {exc}")
-                print("Sugerencia: vuelve a autenticar con --login")
+                print(f"Error reading Copilot usage: {exc}")
+                print("Tip: re-authenticate with --login")
                 print("!" * 72)
                 return 1
 
@@ -2334,11 +2483,11 @@ def main() -> int:
     try:
         return run_monitor(args)
     except KeyboardInterrupt:
-        print("\nMonitor detenido por el usuario.")
-        log_runtime_event("Cierre por KeyboardInterrupt")
+        print("\nMonitor stopped by user.")
+        log_runtime_event("Closed by KeyboardInterrupt")
         return 0
     except Exception:
-        log_runtime_event("Excepcion no controlada en main:\n" + traceback.format_exc())
+        log_runtime_event("Unhandled exception in main:\n" + traceback.format_exc())
         return 1
 
 

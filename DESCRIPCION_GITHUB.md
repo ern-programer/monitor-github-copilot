@@ -1,47 +1,48 @@
-# Monitor GitHub Copilot
+# GitHub Copilot Monitor
 
-Monitor visual de uso mensual de GitHub Copilot (Premium requests), pensado para tener siempre a la vista el consumo de una o varias cuentas.
+Visual monthly usage monitor for GitHub Copilot Premium requests, designed to keep one or multiple accounts always visible.
 
-## Que es este proyecto
+## What this project is
 
-Es una aplicacion en Python que lee la pagina autenticada de GitHub Copilot Features y muestra una barra flotante con:
+This Python app reads the authenticated GitHub Copilot Features page and displays a floating bar with:
 
-- porcentaje de uso actual
-- progreso visual
-- ritmo de consumo y proyeccion mensual
-- estado del plan y nota de reinicio (cuando GitHub lo informa)
+- current usage percentage
+- visual progress bar
+- usage pace and monthly projection
+- plan status and reset note (when provided by GitHub)
 
-## Para que sirve
+## What it is useful for
 
-- evitar sorpresas por consumo alto a fin de mes
-- monitorear varias cuentas desde una sola ventana
-- tener un indicador liviano tipo taskbar sin abrir el navegador
+- avoiding end-of-month usage surprises
+- monitoring multiple accounts in one window
+- keeping a lightweight taskbar-style indicator without opening the browser
 
-## Funcionalidades principales
+## Main features
 
-- interfaz flotante movible, opacidad configurable y always-on-top
-- modo compacto tipo taskbar (70, 100 y 150 px)
-- bandeja del sistema (restaurar, actualizar, salir)
-- soporte multi-cuenta
-- login asistido con sesion persistente
-- instancia unica con bring-to-front
-- configuracion persistente por archivo INI y menu en la UI
+- movable floating UI, configurable opacity, always-on-top
+- compact taskbar mode (70, 100, and 150 px)
+- system tray support (restore, refresh, exit)
+- multi-account support
+- guided login with persistent session
+- single-instance behavior with bring-to-front
+- persistent INI configuration and in-app settings menu
+- hot-switch language (English/Spanish) and theme (dark/light)
 
-## Plataformas
+## Platforms
 
-- Windows: soporte completo
-- Linux: version separada en monitor_github_linux
+- Windows: full support
+- Linux: separate version in monitor_github_linux
 
-## Privacidad y alcance
+## Privacy and scope
 
-El proyecto no usa un endpoint publico oficial para este dato. Toma la informacion desde la pagina de configuracion autenticada del usuario en GitHub. La sesion se guarda localmente en archivos de estado para evitar relogin continuo.
+The project does not use an official public API endpoint for this value. It reads data from the user's authenticated GitHub settings page. Session state is stored locally to avoid frequent re-login.
 
-## Inicio rapido
+## Quick start
 
-1. Ejecutar setup_entorno.bat
-2. Ejecutar iniciar_monitor_github.bat
-3. Si es la primera vez, completar login cuando lo solicite
+1. Run setup_entorno.bat
+2. Run iniciar_monitor_github.bat
+3. On first run, complete login when prompted
 
-## Estado de version
+## Current visual version
 
-Version visual actual: v1.3
+Current visual version: v1.3.1

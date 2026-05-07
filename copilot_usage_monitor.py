@@ -54,6 +54,53 @@ RUNTIME_LOG_KEEP_LINES = 350
 AUTOSTART_REG_NAME = "CopilotUsageBar"
 APP_VERSION = "v1.3"
 
+THEME_DARK = "dark"
+THEME_LIGHT = "light"
+THEME_PALETTES = {
+    THEME_DARK: {
+        "bg": "#101113",
+        "border": "#2b2f36",
+        "text_primary": "#e9ecef",
+        "text_secondary": "#9fb3c8",
+        "text_muted": "#8ea0b5",
+        "text_clock": "#dfe7ef",
+        "refresh": "#8bd3ff",
+        "taskbar_dot": "#66d9ff",
+        "tray_dot": "#ff922b",
+        "close_dot": "#ff5d5d",
+        "track": "#2b2f36",
+        "bar_text": "#dfe7ef",
+        "error": "#e03131",
+        "tooltip_bg": "#1f2430",
+        "tooltip_fg": "#dfe7ef",
+        "tooltip_border": "#3a4654",
+        "tray_bg": "#101113",
+        "tray_card": "#1f2933",
+        "tray_card_border": "#3a4654",
+    },
+    THEME_LIGHT: {
+        "bg": "#f7f9fc",
+        "border": "#c9d5e2",
+        "text_primary": "#1f2a36",
+        "text_secondary": "#3d5369",
+        "text_muted": "#657b91",
+        "text_clock": "#2d3f51",
+        "refresh": "#1f8bd4",
+        "taskbar_dot": "#0aa6c2",
+        "tray_dot": "#c17c00",
+        "close_dot": "#c23b3b",
+        "track": "#d9e2ec",
+        "bar_text": "#1f2a36",
+        "error": "#b83232",
+        "tooltip_bg": "#ffffff",
+        "tooltip_fg": "#1f2a36",
+        "tooltip_border": "#b8c6d6",
+        "tray_bg": "#edf3f9",
+        "tray_card": "#ffffff",
+        "tray_card_border": "#b8c6d6",
+    },
+}
+
 try:
     import winreg
 except Exception:
@@ -240,6 +287,7 @@ window_width = 520
 always_on_top = true
 taskbar_compact_mode = false
 taskbar_compact_width = 150
+theme = dark
 extra_state_files =
 
 [windows]
@@ -266,6 +314,7 @@ def load_config(config_path: Path) -> dict[str, str]:
         "always_on_top": str(app.get("always_on_top", "true")),
         "taskbar_compact_mode": str(app.get("taskbar_compact_mode", "false")),
         "taskbar_compact_width": str(app.get("taskbar_compact_width", "150")),
+        "theme": str(app.get("theme", THEME_DARK)),
         "extra_state_files": str(app.get("extra_state_files", "")),
         "auto_start_enabled": str(windows.get("auto_start_enabled", "false")),
     }
@@ -348,6 +397,13 @@ def normalize_taskbar_width(value: int) -> int:
     if value <= 125:
         return 100
     return 150
+
+
+def normalize_theme(value: str | None) -> str:
+    raw = (value or "").strip().lower()
+    if raw in THEME_PALETTES:
+        return raw
+    return THEME_DARK
 
 
 def parse_state_file_list(raw_value: str | None) -> list[Path]:
@@ -528,7 +584,7 @@ def run_account_assistant(args: argparse.Namespace) -> int | None:
     return None
 
 
-def resolve_settings(args: argparse.Namespace) -> tuple[int, bool, float, bool, bool, int, bool, bool, int, list[Path]]:
+def resolve_settings(args: argparse.Namespace) -> tuple[int, bool, float, bool, bool, int, bool, bool, int, str, list[Path]]:
     config = load_config(args.config)
 
     interval = args.interval
@@ -582,6 +638,8 @@ def resolve_settings(args: argparse.Namespace) -> tuple[int, bool, float, bool, 
     if args.taskbar_compact_150:
         taskbar_compact_width = 150
 
+    theme = normalize_theme(config.get("theme", THEME_DARK))
+
     extra_state_files = parse_state_file_list(config["extra_state_files"])
     if args.extra_state_files is not None:
         extra_state_files = parse_state_file_list(args.extra_state_files)
@@ -596,6 +654,7 @@ def resolve_settings(args: argparse.Namespace) -> tuple[int, bool, float, bool, 
         always_on_top,
         taskbar_compact_mode,
         taskbar_compact_width,
+        theme,
         extra_state_files,
     )
 
@@ -859,14 +918,30 @@ class CopilotUsageClient:
 
 
 class Tooltip:
-    def __init__(self, widget, text: str, delay_ms: int = 350) -> None:
+    def __init__(
+        self,
+        widget,
+        text: str,
+        delay_ms: int = 350,
+        bg: str = "#1f2430",
+        fg: str = "#dfe7ef",
+        border: str = "#3a4654",
+    ) -> None:
         self.widget = widget
         self.text = text
         self.delay_ms = delay_ms
+        self.bg = bg
+        self.fg = fg
+        self.border = border
         self.tip_window = None
         self.after_id = None
         widget.bind("<Enter>", self.on_enter, add="+")
         widget.bind("<Leave>", self.on_leave, add="+")
+
+    def set_colors(self, bg: str, fg: str, border: str) -> None:
+        self.bg = bg
+        self.fg = fg
+        self.border = border
 
     def on_enter(self, _event) -> None:
         self.after_id = self.widget.after(self.delay_ms, self.show)
@@ -890,10 +965,12 @@ class Tooltip:
             tw,
             text=self.text,
             justify="left",
-            bg="#1f2430",
-            fg="#dfe7ef",
+            bg=self.bg,
+            fg=self.fg,
             relief="solid",
             borderwidth=1,
+            highlightthickness=1,
+            highlightbackground=self.border,
             padx=6,
             pady=4,
             font=("Segoe UI", 8),
@@ -919,6 +996,7 @@ class FloatingBarApp:
         always_on_top: bool,
         taskbar_compact_mode: bool,
         taskbar_compact_width: int,
+        theme: str,
         single_instance_server: socket.socket | None,
         config_path: Path,
     ) -> None:
@@ -935,6 +1013,8 @@ class FloatingBarApp:
         self.always_on_top = always_on_top
         self.taskbar_compact_mode = taskbar_compact_mode
         self.taskbar_compact_width = normalize_taskbar_width(taskbar_compact_width)
+        self.theme = normalize_theme(theme)
+        self.theme_colors = THEME_PALETTES[self.theme]
         self.single_instance_server = single_instance_server
         self.config_path = config_path
         self.closed = False
@@ -951,10 +1031,12 @@ class FloatingBarApp:
         self.compact_refresh_visible = False
         self.compact_active_index = 0
         self.multi_rows: list[dict] = []
+        self.tooltips: list[Tooltip] = []
 
         self.clients = [CopilotUsageClient(state_file=sf, headless=True) for sf in state_files]
 
         self.root = tk.Tk()
+        self.theme_var = tk.StringVar(value=self.theme)
         self.root.title("Copilot Usage Bar")
         self.window_height = 60
         self.root.geometry(f"{self.window_width}x{self.window_height}+60+60")
@@ -968,6 +1050,7 @@ class FloatingBarApp:
 
         container = tk.Frame(self.root, bg="#101113", highlightthickness=1, highlightbackground="#2b2f36")
         container.pack(fill="both", expand=True, padx=2, pady=(0, 2))
+        self.container_frame = container
 
         header = tk.Frame(container, bg="#101113")
         header.pack(fill="x", padx=8, pady=(0, 0))
@@ -1036,9 +1119,11 @@ class FloatingBarApp:
         dot_row = tk.Frame(header, bg="#101113")
         dot_row.place(relx=1.0, x=2, y=0, anchor="ne")
         dot_row.lift()
+        self.dot_row = dot_row
 
         lower_row = tk.Frame(right_header, bg="#101113")
         lower_row.pack(side="top", anchor="e", pady=(0, 0))
+        self.lower_row = lower_row
 
         self.percent_label = tk.Label(
             lower_row,
@@ -1184,16 +1269,20 @@ class FloatingBarApp:
         self.menu_taskbar.add_command(label="Cambiar a 150px", command=lambda: self.activate_taskbar_compact_width(150))
         self.menu_taskbar.add_command(label="Salir", command=self.close)
 
-        Tooltip(self.tray_button, "Minimizar al area de notificacion")
-        Tooltip(self.taskbar_button, "Minimizar a modo taskbar")
-        Tooltip(self.refresh_button, "Actualizar ahora")
-        Tooltip(self.close_button, "Salir")
-        Tooltip(self.menu_button, "Abrir menu")
-        Tooltip(self.percent_label, "Uso mensual del cupo de Premium requests")
-        Tooltip(
+        self.tooltips = [
+            Tooltip(self.tray_button, "Minimizar al area de notificacion"),
+            Tooltip(self.taskbar_button, "Minimizar a modo taskbar"),
+            Tooltip(self.refresh_button, "Actualizar ahora"),
+            Tooltip(self.close_button, "Salir"),
+            Tooltip(self.menu_button, "Abrir menu"),
+            Tooltip(self.percent_label, "Uso mensual del cupo de Premium requests"),
+            Tooltip(
             self.metrics_label,
             "Usuario: cuenta GitHub activa\nRitmo: uso actual vs ritmo lineal\nMes: porcentaje de mes transcurrido\nProy: proyeccion al cierre",
-        )
+            ),
+        ]
+
+        self.apply_theme()
 
         self.on_resize(None)
         if self.taskbar_compact_mode:
@@ -1210,6 +1299,70 @@ class FloatingBarApp:
         state = "ON" if self.always_on_top else "OFF"
         self.menu_full.entryconfig(self.menu_always_on_top_index, label=f"Siempre visible: {state}")
 
+    def apply_theme(self) -> None:
+        self.theme_colors = THEME_PALETTES[self.theme]
+        c = self.theme_colors
+
+        self.root.configure(bg=c["bg"])
+        self.container_frame.configure(bg=c["bg"], highlightbackground=c["border"])
+        self.header_frame.configure(bg=c["bg"])
+        self.title_container.configure(bg=c["bg"])
+        self.right_header.configure(bg=c["bg"])
+        self.dot_row.configure(bg=c["bg"])
+        self.lower_row.configure(bg=c["bg"])
+        self.rows_container.configure(bg=c["bg"])
+
+        self.menu_button.configure(bg=c["bg"], fg=c["text_secondary"])
+        self.title_label.configure(bg=c["bg"], fg=c["text_primary"])
+        self.title_version_label.configure(bg=c["bg"], fg=c["text_muted"])
+        self.metrics_label.configure(bg=c["bg"], fg=c["text_secondary"])
+        self.time_label.configure(bg=c["bg"], fg=c["text_clock"])
+        self.percent_label.configure(bg=c["bg"], fg=c["text_primary"])
+
+        self.tray_button.configure(bg=c["bg"], fg=c["tray_dot"])
+        self.taskbar_button.configure(bg=c["bg"], fg=c["taskbar_dot"])
+        self.close_button.configure(bg=c["bg"], fg=c["close_dot"])
+        self.refresh_button.configure(bg=c["bg"], fg=c["refresh"])
+
+        self.canvas.configure(bg=c["bg"])
+        self.canvas.itemconfig(self.track, fill=c["track"])
+        self.canvas.itemconfig(self.bar_text, fill=c["bar_text"])
+        self.canvas.itemconfig(self.compact_refresh_icon, fill=c["refresh"])
+
+        if self.current_percent <= 0.0 and self.current_bar_label == "sin datos":
+            self.current_fill_color = c["track"]
+
+        for row in self.multi_rows:
+            row["frame"].configure(bg=c["bg"])
+            row["account_label"].configure(bg=c["bg"], fg=c["text_secondary"])
+            if row.get("label") == "ERR":
+                row["pct_label"].configure(bg=c["bg"], fg=c["error"])
+            else:
+                row["pct_label"].configure(bg=c["bg"])
+            row["canvas"].configure(bg=c["bg"])
+            row["canvas"].itemconfig(row["track"], fill=c["track"])
+            row["canvas"].itemconfig(row["text"], fill=c["bar_text"])
+
+        for tip in self.tooltips:
+            tip.set_colors(c["tooltip_bg"], c["tooltip_fg"], c["tooltip_border"])
+
+        if self.tray_icon is not None:
+            try:
+                self.tray_icon.icon = self.create_tray_image()
+            except Exception:
+                pass
+
+        self.on_resize(None)
+
+    def set_theme(self, theme: str) -> None:
+        normalized = normalize_theme(theme)
+        if normalized == self.theme:
+            return
+        self.theme = normalized
+        self.apply_theme()
+        self.persist_runtime_config()
+        self.rebuild_settings_menu()
+
     def persist_runtime_config(self) -> None:
         config_snapshot = load_config(self.config_path)
         extra_files = parse_state_file_list(config_snapshot.get("extra_state_files", ""))
@@ -1225,6 +1378,7 @@ class FloatingBarApp:
                 "always_on_top": "true" if self.always_on_top else "false",
                 "taskbar_compact_mode": "true" if self.taskbar_compact_mode else "false",
                 "taskbar_compact_width": str(self.taskbar_compact_width),
+                "theme": self.theme,
                 "extra_state_files": stringify_state_file_list(extra_files),
             },
         )
@@ -1233,6 +1387,24 @@ class FloatingBarApp:
         self.menu_settings.delete(0, "end")
         self.menu_settings.add_command(label=f"Intervalo ({self.interval_s}s)...", command=self.configure_interval)
         self.menu_settings.add_command(label=f"Opacidad ({self.opacity:.2f})...", command=self.configure_opacity)
+        theme_menu = tk.Menu(self.menu_settings, tearoff=0)
+        self.theme_var.set(self.theme)
+        theme_menu.add_radiobutton(
+            label="Oscuro",
+            value=THEME_DARK,
+            variable=self.theme_var,
+            command=lambda: self.set_theme(THEME_DARK),
+        )
+        theme_menu.add_radiobutton(
+            label="Claro",
+            value=THEME_LIGHT,
+            variable=self.theme_var,
+            command=lambda: self.set_theme(THEME_LIGHT),
+        )
+        self.menu_settings.add_cascade(
+            label=f"Tema: {'Claro' if self.theme == THEME_LIGHT else 'Oscuro'}",
+            menu=theme_menu,
+        )
         self.menu_settings.add_command(
             label=f"Auto-width: {'ON' if self.auto_width else 'OFF'} (alternar)",
             command=self.toggle_auto_width,
@@ -1853,10 +2025,10 @@ class FloatingBarApp:
                 ok_count += 1
             else:
                 row["percent"] = 0.0
-                row["color"] = "#e03131"
+                row["color"] = self.theme_colors["error"]
                 row["label"] = "ERR"
                 row["account_label"].config(text=f"Cuenta {idx + 1}")
-                row["pct_label"].config(text="ERR", fg="#e03131")
+                row["pct_label"].config(text="ERR", fg=self.theme_colors["error"])
 
         self.metrics_label.config(text=f" | {ok_count}/{len(snapshots)} cuentas OK")
         self.on_resize(None)
@@ -1870,19 +2042,23 @@ class FloatingBarApp:
         self.root.after(1000, self.periodic_clock)
 
     def create_tray_image(self) -> object:
+        c = self.theme_colors
+        img = Image.new("RGBA", (64, 64), color=c["tray_bg"])
+        draw = ImageDraw.Draw(img)
+        draw.rectangle((8, 8, 56, 56), fill=c["tray_card"], outline=c["tray_card_border"], width=2)
+        draw.rectangle((14, 30, 50, 42), fill=c["track"])
+        draw.rectangle((14, 30, 34, 42), fill="#12b886")
+        draw.text((16, 12), "GH", fill=c["text_clock"])
+
         icon_path = Path("assets") / "github_favicon.png"
         if icon_path.exists():
             try:
-                return Image.open(icon_path).convert("RGBA").resize((64, 64), Image.Resampling.LANCZOS)
+                favicon = Image.open(icon_path).convert("RGBA").resize((20, 20), Image.Resampling.LANCZOS)
+                img.alpha_composite(favicon, (22, 12))
+                return img
             except Exception:
                 pass
 
-        img = Image.new("RGB", (64, 64), color="#101113")
-        draw = ImageDraw.Draw(img)
-        draw.rectangle((8, 8, 56, 56), fill="#1f2933", outline="#3a4654", width=2)
-        draw.rectangle((14, 30, 50, 42), fill="#2b2f36")
-        draw.rectangle((14, 30, 34, 42), fill="#12b886")
-        draw.text((16, 12), "GH", fill="#dfe7ef")
         return img
 
     def restore_from_tray(self) -> None:
@@ -1974,8 +2150,8 @@ class FloatingBarApp:
     def set_error_state(self, message: str) -> None:
         self.current_percent = 0.0
         self.current_bar_label = "sin datos"
-        self.current_fill_color = "#2b2f36"
-        self.percent_label.config(text="ERR", fg="#e03131")
+        self.current_fill_color = self.theme_colors["track"]
+        self.percent_label.config(text="ERR", fg=self.theme_colors["error"])
         self.current_metrics_label = f" | Error: {message}"
         self.metrics_label.config(text=self.current_metrics_label)
         w = max(80, self.canvas.winfo_width())
@@ -2072,6 +2248,7 @@ def run_monitor(args: argparse.Namespace) -> int:
         always_on_top,
         taskbar_compact_mode,
         taskbar_compact_width,
+        theme,
         extra_state_files,
     ) = resolve_settings(args)
 
@@ -2102,6 +2279,7 @@ def run_monitor(args: argparse.Namespace) -> int:
             always_on_top=always_on_top,
             taskbar_compact_mode=taskbar_compact_mode,
             taskbar_compact_width=taskbar_compact_width,
+            theme=theme,
             single_instance_server=instance_server,
             config_path=args.config,
         )

@@ -148,6 +148,8 @@ UI_TEXTS = {
     "add_account": {LANG_EN: "Add account...", LANG_ES: "Agregar cuenta..."},
     "remove_account": {LANG_EN: "Remove account...", LANG_ES: "Quitar cuenta..."},
     "restart_now": {LANG_EN: "Restart bar now", LANG_ES: "Reiniciar barra ahora"},
+    "confirm_exit_title": {LANG_EN: "Exit monitor", LANG_ES: "Salir del monitor"},
+    "confirm_exit_prompt": {LANG_EN: "Do you want to close the monitor?", LANG_ES: "Quieres cerrar el monitor?"},
     "updating": {LANG_EN: "Updating data...", LANG_ES: "Actualizando datos..."},
     "error_prefix": {LANG_EN: "Error", LANG_ES: "Error"},
     "error_internal_ui": {LANG_EN: "Internal UI error (see monitor_runtime.log)", LANG_ES: "Error interno UI (ver monitor_runtime.log)"},
@@ -1307,7 +1309,7 @@ class FloatingBarApp:
             cursor="hand2",
         )
         self.close_button.pack(side="left", padx=(0, 0))
-        self.close_button.bind("<Button-1>", lambda _event: self.close(reason="close_button"))
+        self.close_button.bind("<Button-1>", lambda _event: self.request_close(reason="close_button"))
 
         self.refresh_button = tk.Label(
             lower_row,
@@ -1367,7 +1369,7 @@ class FloatingBarApp:
         self.root.report_callback_exception = self.on_tk_callback_exception
         self.root.bind("<Button-3>", self.show_menu)
         self.root.bind("<Configure>", self.on_resize)
-        self.root.protocol("WM_DELETE_WINDOW", lambda: self.close(reason="wm_delete"))
+        self.root.protocol("WM_DELETE_WINDOW", lambda: self.request_close(reason="wm_delete"))
 
         self.build_menus()
         self.build_tooltips()
@@ -1415,14 +1417,14 @@ class FloatingBarApp:
         self.menu_full.add_cascade(label=self.tr("settings"), menu=self.menu_settings)
         self.menu_full.add_command(label=self.tr("logout"), command=self.relogin)
         self.menu_full.add_separator()
-        self.menu_full.add_command(label=self.tr("exit"), command=lambda: self.close(reason="full_menu"))
+        self.menu_full.add_command(label=self.tr("exit"), command=lambda: self.request_close(reason="full_menu"))
 
         self.menu_taskbar = tk.Menu(self.root, tearoff=0)
         self.menu_taskbar.add_command(label=self.tr("restore"), command=self.restore_from_taskbar_compact)
         self.menu_taskbar.add_command(label=self.tr("switch_70"), command=lambda: self.activate_taskbar_compact_width(70))
         self.menu_taskbar.add_command(label=self.tr("switch_100"), command=lambda: self.activate_taskbar_compact_width(100))
         self.menu_taskbar.add_command(label=self.tr("switch_150"), command=lambda: self.activate_taskbar_compact_width(150))
-        self.menu_taskbar.add_command(label=self.tr("exit"), command=lambda: self.close(reason="taskbar_menu"))
+        self.menu_taskbar.add_command(label=self.tr("exit"), command=lambda: self.request_close(reason="taskbar_menu"))
 
     def build_tooltips(self) -> None:
         self.tooltips = [
@@ -1902,6 +1904,8 @@ class FloatingBarApp:
         if not self.taskbar_compact_mode:
             return
 
+        log_runtime_event("Restore requested from taskbar compact mode")
+
         if self.restore_geometry is not None:
             target_width, target_x, target_y = self.restore_geometry
         else:
@@ -1940,6 +1944,10 @@ class FloatingBarApp:
             self.last_normal_y = y
         final_width = compact_width if self.taskbar_compact_mode else self.window_width
         self.root.geometry(f"{final_width}x{self.window_height}+{x}+{y}")
+        if self.compact_refresh_visible or self.is_hidden_to_tray:
+            mode = "taskbar" if self.taskbar_compact_mode else "full"
+            hidden = "yes" if self.is_hidden_to_tray else "no"
+            log_runtime_event(f"Geometry applied: mode={mode} size={final_width}x{self.window_height} pos=({x},{y}) hidden_to_tray={hidden}")
 
     def clamp_to_work_area(self, x: int, y: int, width: int, height: int) -> tuple[int, int]:
         left, top, right, bottom = self.get_work_area()
@@ -2073,6 +2081,9 @@ class FloatingBarApp:
     def set_taskbar_compact_mode(self, enabled: bool, persist_config: bool = True) -> None:
         was_compact = self.taskbar_compact_mode
         self.taskbar_compact_mode = enabled
+        if enabled != was_compact:
+            mode = "taskbar" if enabled else "full"
+            log_runtime_event(f"Mode switch: {mode}")
         if enabled:
             if not was_compact:
                 self.last_non_compact_geometry = self.root.geometry()
@@ -2130,11 +2141,13 @@ class FloatingBarApp:
             self.root.overrideredirect(True)
             self.apply_always_on_top()
             self.apply_window_geometry(self.window_width)
+            log_runtime_event("Map/restore event handled")
         except Exception:
             pass
 
     def bring_to_front(self, source: str = "manual") -> None:
         log_single_instance_event(f"bring_to_front solicitado ({source})")
+        log_runtime_event(f"Bring-to-front requested ({source})")
         if self.is_hidden_to_tray:
             self.restore_from_tray()
             return
@@ -2170,7 +2183,27 @@ class FloatingBarApp:
         # En taskbar compacto, Escape puede dispararse por foco accidental.
         if self.taskbar_compact_mode:
             return
-        self.close(reason="escape_key")
+        self.request_close(reason="escape_key")
+
+    def request_close(self, reason: str) -> None:
+        if self.closed:
+            return
+
+        # Evita cierres accidentales desde menús y acciones de UI.
+        require_confirm = reason in {
+            "taskbar_menu",
+            "full_menu",
+            "close_button",
+            "wm_delete",
+            "escape_key",
+            "tray_menu",
+        }
+        if require_confirm:
+            if not messagebox.askyesno(self.tr("confirm_exit_title"), self.tr("confirm_exit_prompt"), parent=self.root):
+                log_runtime_event(f"Close canceled: {reason}")
+                return
+
+        self.close(reason=reason)
 
     def relogin(self) -> None:
         try:
@@ -2258,6 +2291,8 @@ class FloatingBarApp:
             self.apply_always_on_top()
             if not self.taskbar_compact_mode:
                 self.apply_window_geometry(self.normal_window_width)
+            mode = "taskbar" if self.taskbar_compact_mode else "full"
+            log_runtime_event(f"Restored from tray to mode={mode}")
 
         self.root.after(0, _restore)
 
@@ -2283,6 +2318,8 @@ class FloatingBarApp:
 
         self.is_hidden_to_tray = True
         self.root.withdraw()
+        mode = "taskbar" if self.taskbar_compact_mode else "full"
+        log_runtime_event(f"Minimized to tray from mode={mode}")
 
         if self.tray_icon is None:
             menu = pystray.Menu(
@@ -2294,7 +2331,7 @@ class FloatingBarApp:
                 pystray.MenuItem("Actualizar", lambda _icon, _item: self.root.after(0, self.refresh_now)),
                 pystray.MenuItem(
                     "Salir",
-                    lambda _icon, _item: self.root.after(0, lambda: self.close(reason="tray_menu")),
+                    lambda _icon, _item: self.root.after(0, lambda: self.request_close(reason="tray_menu")),
                 ),
             )
             self.tray_icon = pystray.Icon(

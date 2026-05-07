@@ -2190,22 +2190,16 @@ class FloatingBarApp:
 
         self._show_desktop_fallback_active = True
         self._show_desktop_fallback_until_ts = time.time() + 7.0
-        self._switching_to_fallback_dock = True
-        try:
-            self.set_taskbar_compact_mode(False, persist_config=False)
-        finally:
-            self._switching_to_fallback_dock = False
-
+        # Mantiene modo taskbar (compacto) y solo cambia posicion temporalmente.
         self.dock_top = True
         self.auto_width = False
-        target_width = max(420, self.normal_window_width)
-        self.apply_window_geometry(target_width)
+        self.apply_window_geometry(self.normal_window_width)
         try:
             self.root.lift()
             self.apply_always_on_top()
         except Exception:
             pass
-        log_runtime_event(f"Show-desktop fallback activated: top dock (state={trigger_state})")
+        log_runtime_event(f"Show-desktop fallback activated: top compact dock (state={trigger_state})")
 
     def toggle_taskbar_compact_mode(self) -> None:
         self.set_taskbar_compact_mode(not self.taskbar_compact_mode)
@@ -2451,7 +2445,6 @@ class FloatingBarApp:
                 self._show_desktop_fallback_active = False
                 self._show_desktop_fallback_until_ts = 0.0
                 self.dock_top = False
-                self.set_taskbar_compact_mode(True, persist_config=False)
                 self.apply_window_geometry(self.normal_window_width)
                 log_runtime_event("Show-desktop fallback finished: returned to taskbar mode")
 

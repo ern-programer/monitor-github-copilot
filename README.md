@@ -4,6 +4,15 @@ This project shows a movable floating bar on Windows with your monthly GitHub Co
 
 Project overview for GitHub: see [DESCRIPCION_GITHUB.md](DESCRIPCION_GITHUB.md).
 
+## Quick Start (2 minutes)
+
+```bash
+git clone https://github.com/ern-programer/monitor-github-copilot.git
+cd monitor-github-copilot
+setup_entorno.bat
+iniciar_monitor_github.bat
+```
+
 ## What It Shows
 
 - Current monthly usage percentage
@@ -172,3 +181,20 @@ Creates `dist_liviano` with required end-user files and `dist_liviano.zip` ready
 - For personal accounts, GitHub does not provide a stable public API endpoint for this real-time value; the app reads your authenticated settings page.
 - If session expires, run with `--login` or use in-app re-login.
 - If GitHub changes page text/selectors, extraction patterns may need updates.
+
+## Contributing
+
+Contributions are welcome: bug fixes, UX improvements, docs, and platform support.
+
+- Contribution guide: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Code of conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- Project roadmap: [ROADMAP.md](ROADMAP.md)
+
+Suggested contribution flow:
+
+1. Fork the repository.
+2. Create a branch for your change.
+3. Validate locally.
+4. Open a pull request with context and test notes.
+
+If you build custom variants, feel free to share your fork and open PRs so others can benefit.

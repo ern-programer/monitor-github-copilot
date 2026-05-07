@@ -134,6 +134,32 @@ Atajo rapido dentro de la barra:
 - Desde bandeja: Restaurar, Actualizar, Salir
 - Tecla Escape: cerrar barra
 
+## Capturas
+
+Barra principal (tema claro):
+
+![Barra principal clara](assets/for_readme/1.png)
+
+Menu contextual (espanol):
+
+![Menu contextual espanol](assets/for_readme/2.png)
+
+Modo compacto taskbar:
+
+![Modo compacto taskbar](assets/for_readme/3.png)
+
+Barra principal (tema oscuro):
+
+![Barra principal oscura](assets/for_readme/4.png)
+
+Menu contextual (ingles):
+
+![Menu contextual ingles](assets/for_readme/5.png)
+
+Menu de configuracion:
+
+![Menu de configuracion](assets/for_readme/6.png)
+
 ## Configuracion persistente
 
 Edita el archivo `monitor_config.ini`:

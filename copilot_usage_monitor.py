@@ -122,6 +122,10 @@ UI_TEXTS = {
     "switch_70": {LANG_EN: "Switch to 70px", LANG_ES: "Cambiar a 70px"},
     "switch_100": {LANG_EN: "Switch to 100px", LANG_ES: "Cambiar a 100px"},
     "switch_150": {LANG_EN: "Switch to 150px", LANG_ES: "Cambiar a 150px"},
+    "show_desktop_fallback_dock_toggle": {
+        LANG_EN: "Show-desktop fallback (top dock): {state}",
+        LANG_ES: "Fallback mostrar escritorio (dock superior): {state}",
+    },
     "tooltip_tray": {LANG_EN: "Minimize to notification area", LANG_ES: "Minimizar al area de notificacion"},
     "tooltip_taskbar": {LANG_EN: "Minimize to taskbar mode", LANG_ES: "Minimizar a modo taskbar"},
     "tooltip_refresh": {LANG_EN: "Refresh now", LANG_ES: "Actualizar ahora"},
@@ -375,6 +379,7 @@ window_width = 520
 always_on_top = true
 taskbar_compact_mode = false
 taskbar_compact_width = 150
+show_desktop_fallback_dock = true
 theme = dark
 language = en
 extra_state_files =
@@ -403,6 +408,7 @@ def load_config(config_path: Path) -> dict[str, str]:
         "always_on_top": str(app.get("always_on_top", "true")),
         "taskbar_compact_mode": str(app.get("taskbar_compact_mode", "false")),
         "taskbar_compact_width": str(app.get("taskbar_compact_width", "150")),
+        "show_desktop_fallback_dock": str(app.get("show_desktop_fallback_dock", "true")),
         "theme": str(app.get("theme", THEME_DARK)),
         "language": str(app.get("language", LANG_EN)),
         "extra_state_files": str(app.get("extra_state_files", "")),
@@ -681,7 +687,7 @@ def run_account_assistant(args: argparse.Namespace) -> int | None:
     return None
 
 
-def resolve_settings(args: argparse.Namespace) -> tuple[int, bool, float, bool, bool, int, bool, bool, int, str, str, list[Path]]:
+def resolve_settings(args: argparse.Namespace) -> tuple[int, bool, float, bool, bool, int, bool, bool, int, bool, str, str, list[Path]]:
     config = load_config(args.config)
 
     interval = args.interval
@@ -735,6 +741,8 @@ def resolve_settings(args: argparse.Namespace) -> tuple[int, bool, float, bool, 
     if args.taskbar_compact_150:
         taskbar_compact_width = 150
 
+    show_desktop_fallback_dock = str_to_bool(config["show_desktop_fallback_dock"], default=True)
+
     theme = normalize_theme(config.get("theme", THEME_DARK))
     language = normalize_language(config.get("language", LANG_EN))
 
@@ -752,6 +760,7 @@ def resolve_settings(args: argparse.Namespace) -> tuple[int, bool, float, bool, 
         always_on_top,
         taskbar_compact_mode,
         taskbar_compact_width,
+        show_desktop_fallback_dock,
         theme,
         language,
         extra_state_files,
@@ -1130,6 +1139,7 @@ class FloatingBarApp:
         always_on_top: bool,
         taskbar_compact_mode: bool,
         taskbar_compact_width: int,
+        show_desktop_fallback_dock: bool,
         theme: str,
         language: str,
         single_instance_server: socket.socket | None,
@@ -1148,6 +1158,7 @@ class FloatingBarApp:
         self.always_on_top = always_on_top
         self.taskbar_compact_mode = taskbar_compact_mode
         self.taskbar_compact_width = normalize_taskbar_width(taskbar_compact_width)
+        self.show_desktop_fallback_dock = show_desktop_fallback_dock
         self.theme = normalize_theme(theme)
         self.language = normalize_language(language)
         self.theme_colors = THEME_PALETTES[self.theme]
@@ -1173,6 +1184,9 @@ class FloatingBarApp:
         self._show_desktop_restore_attempts = 0
         self._last_visibility_guard_state = "normal"
         self._last_taskbar_visibility_snapshot = ""
+        self._switching_to_fallback_dock = False
+        self._show_desktop_fallback_active = False
+        self._show_desktop_fallback_until_ts = 0.0
 
         self.clients = [CopilotUsageClient(state_file=sf, headless=True) for sf in state_files]
 
@@ -1545,6 +1559,7 @@ class FloatingBarApp:
                 "always_on_top": "true" if self.always_on_top else "false",
                 "taskbar_compact_mode": "true" if self.taskbar_compact_mode else "false",
                 "taskbar_compact_width": str(self.taskbar_compact_width),
+                "show_desktop_fallback_dock": "true" if self.show_desktop_fallback_dock else "false",
                 "theme": self.theme,
                 "language": self.language,
                 "extra_state_files": stringify_state_file_list(extra_files),
@@ -1596,6 +1611,10 @@ class FloatingBarApp:
             command=self.toggle_auto_width,
         )
         self.menu_settings.add_command(label=self.tr("set_fixed_width"), command=self.configure_fixed_width)
+        self.menu_settings.add_command(
+            label=self.tr("show_desktop_fallback_dock_toggle", state=("ON" if self.show_desktop_fallback_dock else "OFF")),
+            command=self.toggle_show_desktop_fallback_dock,
+        )
         self.menu_settings.add_separator()
 
         autostart_enabled = is_windows_autostart_enabled()
@@ -1689,6 +1708,11 @@ class FloatingBarApp:
         self.auto_width = not self.auto_width
         if self.auto_width:
             self.update_width_for_content()
+        self.persist_runtime_config()
+        self.rebuild_settings_menu()
+
+    def toggle_show_desktop_fallback_dock(self) -> None:
+        self.show_desktop_fallback_dock = not self.show_desktop_fallback_dock
         self.persist_runtime_config()
         self.rebuild_settings_menu()
 
@@ -2084,6 +2108,13 @@ class FloatingBarApp:
         self.refresh_menu_state_labels()
 
     def set_taskbar_compact_mode(self, enabled: bool, persist_config: bool = True) -> None:
+        if enabled:
+            self._show_desktop_fallback_active = False
+            self._show_desktop_fallback_until_ts = 0.0
+        elif not self._switching_to_fallback_dock:
+            self._show_desktop_fallback_active = False
+            self._show_desktop_fallback_until_ts = 0.0
+
         was_compact = self.taskbar_compact_mode
         self.taskbar_compact_mode = enabled
         if enabled != was_compact:
@@ -2129,6 +2160,35 @@ class FloatingBarApp:
         if persist_config:
             self.persist_runtime_config()
             self.rebuild_settings_menu()
+
+    def activate_show_desktop_fallback(self, trigger_state: str) -> None:
+        if self.closed or self.is_hidden_to_tray:
+            return
+        if not self.show_desktop_fallback_dock:
+            return
+        if not self.taskbar_compact_mode:
+            return
+        if self._show_desktop_fallback_active:
+            return
+
+        self._show_desktop_fallback_active = True
+        self._show_desktop_fallback_until_ts = time.time() + 7.0
+        self._switching_to_fallback_dock = True
+        try:
+            self.set_taskbar_compact_mode(False, persist_config=False)
+        finally:
+            self._switching_to_fallback_dock = False
+
+        self.dock_top = True
+        self.auto_width = False
+        target_width = max(420, self.normal_window_width)
+        self.apply_window_geometry(target_width)
+        try:
+            self.root.lift()
+            self.apply_always_on_top()
+        except Exception:
+            pass
+        log_runtime_event(f"Show-desktop fallback activated: top dock (state={trigger_state})")
 
     def toggle_taskbar_compact_mode(self) -> None:
         self.set_taskbar_compact_mode(not self.taskbar_compact_mode)
@@ -2309,6 +2369,7 @@ class FloatingBarApp:
         if self.closed:
             return
         self.time_label.config(text=f"{dt.datetime.now():%H:%M:%S}")
+        now_ts = time.time()
 
         if self.taskbar_compact_mode and not self.is_hidden_to_tray:
             try:
@@ -2341,6 +2402,7 @@ class FloatingBarApp:
                     self.apply_window_geometry(self.window_width)
                 except Exception:
                     pass
+                self.activate_show_desktop_fallback(trigger_state=state)
             else:
                 # Mantiene prioridad visual en taskbar aunque Windows haga "mostrar escritorio".
                 try:
@@ -2351,7 +2413,14 @@ class FloatingBarApp:
                     pass
             self._last_visibility_guard_state = state
 
-        now_ts = time.time()
+        if self._show_desktop_fallback_active and not self.is_hidden_to_tray and now_ts >= self._show_desktop_fallback_until_ts:
+            self._show_desktop_fallback_active = False
+            self._show_desktop_fallback_until_ts = 0.0
+            self.dock_top = False
+            self.set_taskbar_compact_mode(True, persist_config=False)
+            self.apply_window_geometry(self.normal_window_width)
+            log_runtime_event("Show-desktop fallback finished: returned to taskbar mode")
+
         if now_ts - self.last_heartbeat_ts >= 15.0:
             self.last_heartbeat_ts = now_ts
             try:
@@ -2584,6 +2653,7 @@ def run_monitor(args: argparse.Namespace) -> int:
         always_on_top,
         taskbar_compact_mode,
         taskbar_compact_width,
+        show_desktop_fallback_dock,
         theme,
         language,
         extra_state_files,
@@ -2617,6 +2687,7 @@ def run_monitor(args: argparse.Namespace) -> int:
                 always_on_top=always_on_top,
                 taskbar_compact_mode=taskbar_compact_mode,
                 taskbar_compact_width=taskbar_compact_width,
+                show_desktop_fallback_dock=show_desktop_fallback_dock,
                 theme=theme,
                 language=language,
                 single_instance_server=instance_server,

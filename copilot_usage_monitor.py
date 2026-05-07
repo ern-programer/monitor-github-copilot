@@ -52,7 +52,7 @@ RUNTIME_LOG_FILE = Path("monitor_runtime.log")
 RUNTIME_LOG_MAX_BYTES = 300 * 1024
 RUNTIME_LOG_KEEP_LINES = 350
 AUTOSTART_REG_NAME = "CopilotUsageBar"
-APP_VERSION = "v1.3"
+APP_VERSION = "v1.3.1"
 
 THEME_DARK = "dark"
 THEME_LIGHT = "light"

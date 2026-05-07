@@ -57,7 +57,7 @@ RUNTIME_LOG_KEEP_LINES = 350
 CRASH_LOG_FILE = Path("monitor_crash.log")
 HEARTBEAT_FILE = Path("monitor_heartbeat.txt")
 AUTOSTART_REG_NAME = "CopilotUsageBar"
-APP_VERSION = "v1.3.1"
+APP_VERSION = "v1.3.3"
 LANG_EN = "en"
 LANG_ES = "es"
 

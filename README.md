@@ -139,6 +139,32 @@ If Playwright Chromium is missing, the launcher installs it automatically.
 - Tray: Restore, Refresh, Exit
 - Escape: close bar (disabled in compact taskbar mode)
 
+## Screenshots
+
+Main bar (light theme):
+
+![Main bar light](assets/for_readme/1.png)
+
+Context menu (Spanish):
+
+![Context menu Spanish](assets/for_readme/2.png)
+
+Compact taskbar mode:
+
+![Taskbar compact mode](assets/for_readme/3.png)
+
+Main bar (dark theme):
+
+![Main bar dark](assets/for_readme/4.png)
+
+Context menu (English):
+
+![Context menu English](assets/for_readme/5.png)
+
+Settings menu:
+
+![Settings menu](assets/for_readme/6.png)
+
 ## Persistent Configuration
 
 Edit `monitor_config.ini` or use in-app `Settings`.

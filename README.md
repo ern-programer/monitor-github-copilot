@@ -2,6 +2,8 @@
 
 Este proyecto muestra una barra flotante y movible en Windows con el porcentaje de uso mensual de Premium requests de GitHub Copilot.
 
+Documentacion resumida para GitHub: ver [DESCRIPCION_GITHUB.md](DESCRIPCION_GITHUB.md).
+
 ## Que muestra
 
 - Porcentaje actual de uso mensual

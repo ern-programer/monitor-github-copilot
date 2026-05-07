@@ -5,6 +5,9 @@ __pycache__/
 dist_liviano/
 dist_liviano.zip
 single_instance_events.txt
+monitor_runtime.log
+monitor_crash.log
+monitor_heartbeat.txt
 monitor_config.ini
 RESUMEN_CONTINUIDAD_CHAT.md
 *.code-workspace

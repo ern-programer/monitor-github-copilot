@@ -1,77 +1,85 @@
-# Barra Visual de Uso de GitHub Copilot (Python)
+# GitHub Copilot Usage Visual Bar (Python)
 
-Este proyecto muestra una barra flotante y movible en Windows con el porcentaje de uso mensual de Premium requests de GitHub Copilot.
+This project shows a movable floating bar on Windows with your monthly GitHub Copilot Premium requests usage.
 
-Documentacion resumida para GitHub: ver [DESCRIPCION_GITHUB.md](DESCRIPCION_GITHUB.md).
+Project overview for GitHub: see [DESCRIPCION_GITHUB.md](DESCRIPCION_GITHUB.md).
 
-## Que muestra
+## Quick Start (2 minutes)
 
-- Porcentaje actual de uso mensual
-- Barra de progreso visual angosta
-- Ventana movible (arrastrando con click) y always-on-top
-- Datos de ritmo en el mismo renglon de "Copilot Premium"
-- Modo mini opcional
-- Opacidad configurable
-- Ancho auto-adaptable al contenido
-- Modo dock superior opcional
-- Opcion de "siempre por encima" configurable
-- Modo compacto tipo taskbar (150x30, solo barra y porcentaje)
-- Variante mini taskbar (70x30, para pantallas chicas)
-- Variante intermedia taskbar (100x30)
-- Modo multi-cuenta en una misma ventana (barras apiladas)
-- Estado del plan (cuando la pagina lo expone)
-- Nota de reinicio mensual (si aparece)
-- Ritmo de consumo vs avance del mes
-- Proyeccion al cierre de mes (si mantienes el ritmo actual)
+```bash
+git clone https://github.com/ern-programer/monitor-github-copilot.git
+cd monitor-github-copilot
+setup_entorno.bat
+iniciar_monitor_github.bat
+```
 
-## Requisitos
+## What It Shows
+
+- Current monthly usage percentage
+- Slim visual progress bar
+- Movable always-on-top window (drag with mouse)
+- Pace metrics on the same line as premium usage
+- Optional mini mode
+- Configurable opacity
+- Auto-width based on content
+- Optional top dock mode
+- Configurable always-on-top behavior
+- Taskbar compact mode (150x30, bar + percentage)
+- Taskbar mini variant (70x30)
+- Taskbar medium variant (100x30)
+- Multi-account mode in one window (stacked bars)
+- Plan status (when available on GitHub)
+- Monthly reset note (when available)
+- Usage pace vs month progress
+- End-of-month projection
+
+## Requirements
 
 - Python 3.10+
-- Cuenta de GitHub con acceso a Copilot
+- GitHub account with Copilot access
 
-## Instalacion
+## Installation
 
-Recomendada para usuarios finales (doble clic):
+Recommended for end users (double-click):
 
 ```bash
 setup_entorno.bat
 ```
 
-Este script crea `.venv`, instala dependencias y descarga Chromium para Playwright.
+This script creates `.venv`, installs dependencies, and downloads Playwright Chromium.
 
-Instalacion manual:
+Manual installation:
 
 ```bash
 pip install -r requirements.txt
 python -m playwright install chromium
 ```
 
-Consulta el detalle en `DEPENDENCIAS_USUARIO.md`.
+See details in `DEPENDENCIAS_USUARIO.md`.
 
-## Uso
+## Usage
 
-Primera vez (guardar sesion):
+First run (save session):
 
 ```bash
 python copilot_usage_monitor.py --login
 ```
 
-No hace falta presionar ENTER: cuando completes login y abras Copilot Features,
-la sesion se guarda automaticamente.
+No ENTER needed: once login is complete and Copilot Features opens, session is saved automatically.
 
-Iniciar barra visual:
+Start visual bar:
 
 ```bash
 python copilot_usage_monitor.py --gui --interval 60
 ```
 
-Override rapido por linea de comando:
+Quick override:
 
 ```bash
 python copilot_usage_monitor.py --gui --mini --opacity 0.85
 ```
 
-Ejemplos nuevos:
+Extra examples:
 
 ```bash
 python copilot_usage_monitor.py --gui --dock-top --auto-width
@@ -80,109 +88,102 @@ python copilot_usage_monitor.py --gui --not-always-on-top
 python copilot_usage_monitor.py --gui --taskbar-compact
 python copilot_usage_monitor.py --gui --taskbar-compact --taskbar-compact-70
 python copilot_usage_monitor.py --gui --taskbar-compact --taskbar-compact-100
-python copilot_usage_monitor.py --gui --extra-state-files ".auth\\cuenta2.json;.auth\\cuenta3.json"
+python copilot_usage_monitor.py --gui --extra-state-files ".auth\\account2.json;.auth\\account3.json"
 ```
 
-En multi-cuenta:
+In multi-account mode:
 
-- Vista normal: una barra por cuenta (apiladas)
-- Modo taskbar compacto: carrusel de cuentas
-- Clic simple en mini taskbar: rota a la siguiente cuenta
-- Doble clic en mini taskbar: restaura la vista normal
+- Normal view: one bar per account (stacked)
+- Compact taskbar mode: account carousel
+- Single click in compact mode: move to next account
+- Double click in compact mode: restore normal view
 
-Asistente para agregar cuentas extra:
+Account assistant:
 
 ```bash
-python copilot_usage_monitor.py --add-account cuenta2
-python copilot_usage_monitor.py --remove-account cuenta2
-python copilot_usage_monitor.py --remove-account cuenta2 --delete-state-file
+python copilot_usage_monitor.py --add-account account2
+python copilot_usage_monitor.py --remove-account account2
+python copilot_usage_monitor.py --remove-account account2 --delete-state-file
 python copilot_usage_monitor.py --list-accounts
 ```
 
-Tambien puedes usar el asistente por doble clic:
+You can also use double-click assistants:
 
 ```bash
 agregar_cuenta_copilot.bat
 quitar_cuenta_copilot.bat
 ```
 
-Nota: al quitar una cuenta, por defecto solo se elimina de `extra_state_files` en la configuracion.
-Si agregas `--delete-state-file`, tambien se borra el archivo `.auth\\alias.json`.
+Note: removing an account updates `extra_state_files` by default. Use `--delete-state-file` to also remove `.auth\\alias.json`.
 
-Arranque con doble clic en Windows:
+Windows launcher (double-click):
 
 ```bash
 iniciar_monitor_github.bat
 ```
 
-Nota: si falta Chromium de Playwright, el .bat lo instala automaticamente.
+If Playwright Chromium is missing, the launcher installs it automatically.
 
-Atajo rapido dentro de la barra:
+## In-App Shortcuts
 
-- Click derecho: actualizar ahora, rehacer login, salir
-- Click derecho: opcion "Minimizar a bandeja"
-- Click derecho: opcion "Alternar siempre visible"
-- Click derecho: opcion "Alternar modo compacto taskbar"
-- Click derecho: opcion "Usar mini taskbar 70px"
-- Click derecho: opcion "Usar taskbar intermedio 100px"
-- Click derecho: opcion "Usar taskbar normal 150px"
-- Click derecho: opcion "Alternar dock superior"
-- Click derecho: menu "Configuracion" para cambiar intervalo, opacidad, auto-width, ancho fijo y autoarranque
-- Click derecho: menu "Configuracion > Cuentas" para listar/agregar/quitar cuentas sin editar archivos
-- Click derecho: "Configuracion > Reiniciar barra ahora" para aplicar cambios inmediatamente
-- Boton "_" en la cabecera: minimiza a bandeja
-- Desde bandeja: Restaurar, Actualizar, Salir
-- Tecla Escape: cerrar barra
+- Right click: refresh, re-login, exit
+- Right click: minimize to tray
+- Right click: toggle always-on-top
+- Right click: toggle compact taskbar mode
+- Right click: switch compact width (70/100/150)
+- Right click: toggle top dock
+- Right click: `Settings` menu for interval, opacity, auto-width, fixed width, autostart, language and theme
+- Right click: `Settings > Accounts` to list/add/remove without editing files
+- Right click: `Settings > Restart bar now` to apply changes immediately
+- Header button `≡`: opens same context menu
+- Tray: Restore, Refresh, Exit
+- Escape: close bar (disabled in compact taskbar mode)
 
-## Capturas
+## Screenshots
 
-Barra principal (tema claro):
+Main bar (light theme):
 
-![Barra principal clara](assets/for_readme/1.png)
+![Main bar light](assets/for_readme/1.png)
 
-Menu contextual (espanol):
+Context menu (Spanish):
 
-![Menu contextual espanol](assets/for_readme/2.png)
+![Context menu Spanish](assets/for_readme/2.png)
 
-Modo compacto taskbar:
+Compact taskbar mode:
 
-![Modo compacto taskbar](assets/for_readme/3.png)
+![Taskbar compact mode](assets/for_readme/3.png)
 
-Barra principal (tema oscuro):
+Main bar (dark theme):
 
-![Barra principal oscura](assets/for_readme/4.png)
+![Main bar dark](assets/for_readme/4.png)
 
-Menu contextual (ingles):
+Context menu (English):
 
-![Menu contextual ingles](assets/for_readme/5.png)
+![Context menu English](assets/for_readme/5.png)
 
-Menu de configuracion:
+Settings menu:
 
-![Menu de configuracion](assets/for_readme/6.png)
+![Settings menu](assets/for_readme/6.png)
 
-## Configuracion persistente
+## Persistent Configuration
 
-Edita el archivo `monitor_config.ini`:
+Edit `monitor_config.ini` or use in-app `Settings`.
 
-Tambien puedes manejar estos ajustes desde la UI en `click derecho > Configuracion`.
+- `interval_seconds`: refresh interval in seconds
+- `mini_mode`: `true` or `false`
+- `opacity`: `0.35` to `1.0`
+- `auto_width`: `true` or `false`
+- `dock_top`: `true` or `false`
+- `window_width`: base width in pixels
+- `always_on_top`: `true` or `false`
+- `taskbar_compact_mode`: `true` or `false`
+- `taskbar_compact_width`: `70`, `100`, or `150`
+- `theme`: `dark` or `light`
+- `language`: `en` or `es`
+- `extra_state_files`: semicolon-separated extra sessions
+- `auto_start_enabled`: `true` or `false` for Windows startup
 
-- `interval_seconds`: cada cuantos segundos refresca
-- `mini_mode`: `true` o `false`
-- `opacity`: de `0.35` a `1.0`
-- `auto_width`: `true` o `false`
-- `dock_top`: `true` o `false`
-- `window_width`: ancho base en pixeles
-- `always_on_top`: `true` o `false`
-- `taskbar_compact_mode`: `true` o `false`
-- `taskbar_compact_width`: `70`, `100` o `150`
-- `extra_state_files`: lista separada por `;` con sesiones adicionales
-- `auto_start_enabled`: `true` o `false` para inicio con Windows
-
-Nota: el modo compacto taskbar no se minimiza como boton de aplicacion; se muestra como mini-widget flotante (150x30) anclado sobre la barra de tareas, cerca de la zona de notificacion.
-
-## Autoarranque con Windows
-
-Comandos:
+## Windows Autostart
 
 ```bash
 configurar_autoarranque_windows.bat on
@@ -191,21 +192,35 @@ configurar_autoarranque_windows.bat status
 configurar_autoarranque_windows.bat apply
 ```
 
-`apply` toma el valor de `auto_start_enabled` en `monitor_config.ini` y lo aplica al registro de usuario actual.
+`apply` reads `auto_start_enabled` from `monitor_config.ini` and updates the current user registry key.
 
-## Paquete Liviano Para Distribuir
-
-Para generar una carpeta lista para compartir sin `.venv`:
+## Lightweight Distribution Package
 
 ```bash
 paquete_release.bat
 ```
 
-Esto crea `dist_liviano` con solo los archivos necesarios para el usuario final.
-Tambien genera `dist_liviano.zip` listo para compartir.
+Creates `dist_liviano` with required end-user files and `dist_liviano.zip` ready to share.
 
-## Notas importantes
+## Important Notes
 
-- Para cuentas personales, GitHub no publica un endpoint oficial y estable para este dato en tiempo real, por eso el script lee la pagina de ajustes autenticada.
-- Si caduca la sesion, ejecuta de nuevo con `--login` o usa click derecho > Rehacer login.
-- Si cambian textos/selectores en GitHub, puede ser necesario ajustar las expresiones de extraccion.
+- For personal accounts, GitHub does not provide a stable public API endpoint for this real-time value; the app reads your authenticated settings page.
+- If session expires, run with `--login` or use in-app re-login.
+- If GitHub changes page text/selectors, extraction patterns may need updates.
+
+## Contributing
+
+Contributions are welcome: bug fixes, UX improvements, docs, and platform support.
+
+- Contribution guide: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Code of conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- Project roadmap: [ROADMAP.md](ROADMAP.md)
+
+Suggested contribution flow:
+
+1. Fork the repository.
+2. Create a branch for your change.
+3. Validate locally.
+4. Open a pull request with context and test notes.
+
+If you build custom variants, feel free to share your fork and open PRs so others can benefit.

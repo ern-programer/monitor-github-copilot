@@ -20,6 +20,7 @@ import time
 import tkinter as tk
 import ctypes
 import json
+import traceback
 from dataclasses import dataclass
 from pathlib import Path
 from tkinter import messagebox, simpledialog
@@ -47,6 +48,9 @@ SINGLE_INSTANCE_PORT = 49371
 SINGLE_INSTANCE_LOG_FILE = Path("single_instance_events.txt")
 SINGLE_INSTANCE_LOG_MAX_BYTES = 200 * 1024
 SINGLE_INSTANCE_LOG_KEEP_LINES = 250
+RUNTIME_LOG_FILE = Path("monitor_runtime.log")
+RUNTIME_LOG_MAX_BYTES = 300 * 1024
+RUNTIME_LOG_KEEP_LINES = 350
 AUTOSTART_REG_NAME = "CopilotUsageBar"
 APP_VERSION = "v1.3"
 
@@ -616,6 +620,21 @@ def log_single_instance_event(message: str) -> None:
         pass
 
 
+def log_runtime_event(message: str) -> None:
+    try:
+        if RUNTIME_LOG_FILE.exists() and RUNTIME_LOG_FILE.stat().st_size > RUNTIME_LOG_MAX_BYTES:
+            lines = RUNTIME_LOG_FILE.read_text(encoding="utf-8", errors="ignore").splitlines()
+            tail = lines[-RUNTIME_LOG_KEEP_LINES:]
+            RUNTIME_LOG_FILE.write_text("\n".join(tail) + "\n", encoding="utf-8")
+
+        timestamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with RUNTIME_LOG_FILE.open("a", encoding="utf-8") as fh:
+            fh.write(f"[{timestamp}] {message}\n")
+    except Exception:
+        # El log nunca debe romper la app.
+        pass
+
+
 def try_signal_existing_instance() -> bool:
     try:
         with socket.create_connection((SINGLE_INSTANCE_HOST, SINGLE_INSTANCE_PORT), timeout=0.4) as conn:
@@ -1067,7 +1086,7 @@ class FloatingBarApp:
             cursor="hand2",
         )
         self.close_button.pack(side="left", padx=(0, 0))
-        self.close_button.bind("<Button-1>", lambda _event: self.close())
+        self.close_button.bind("<Button-1>", lambda _event: self.close(reason="close_button"))
 
         self.refresh_button = tk.Label(
             lower_row,
@@ -1123,10 +1142,11 @@ class FloatingBarApp:
             widget.bind("<B1-Motion>", self.on_drag_move)
             widget.bind("<Double-Button-1>", self.on_double_click)
 
-        self.root.bind("<Escape>", lambda _event: self.close())
+        self.root.bind("<Escape>", self.on_escape_key)
+        self.root.report_callback_exception = self.on_tk_callback_exception
         self.root.bind("<Button-3>", self.show_menu)
         self.root.bind("<Configure>", self.on_resize)
-        self.root.protocol("WM_DELETE_WINDOW", self.close)
+        self.root.protocol("WM_DELETE_WINDOW", lambda: self.close(reason="wm_delete"))
 
         self.menu_full = tk.Menu(self.root, tearoff=0)
         self.menu_full.add_command(label="Actualizar ahora", command=self.refresh_now)
@@ -1795,6 +1815,12 @@ class FloatingBarApp:
     def show_menu(self, event: tk.Event) -> None:
         self.popup_current_menu(event.x_root, event.y_root)
 
+    def on_escape_key(self, _event: tk.Event) -> None:
+        # En taskbar compacto, Escape puede dispararse por foco accidental.
+        if self.taskbar_compact_mode:
+            return
+        self.close(reason="escape_key")
+
     def relogin(self) -> None:
         try:
             ensure_login_state(self.primary_state_file)
@@ -1901,7 +1927,10 @@ class FloatingBarApp:
                     default=True,
                 ),
                 pystray.MenuItem("Actualizar", lambda _icon, _item: self.root.after(0, self.refresh_now)),
-                pystray.MenuItem("Salir", lambda _icon, _item: self.root.after(0, self.close)),
+                pystray.MenuItem(
+                    "Salir",
+                    lambda _icon, _item: self.root.after(0, lambda: self.close(reason="tray_menu")),
+                ),
             )
             self.tray_icon = pystray.Icon(
                 "copilot_usage_bar",
@@ -1982,7 +2011,18 @@ class FloatingBarApp:
         self.refresh_now()
         self.root.after(self.interval_s * 1000, self.periodic_refresh)
 
-    def close(self) -> None:
+    def on_tk_callback_exception(self, exc_type: type, exc_value: BaseException, exc_tb: object) -> None:
+        trace = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
+        log_runtime_event(f"Excepcion en callback Tk:\n{trace}")
+        try:
+            self.metrics_label.config(text=" | Error interno UI (ver monitor_runtime.log)")
+        except Exception:
+            pass
+
+    def close(self, reason: str = "unknown") -> None:
+        if self.closed:
+            return
+        log_runtime_event(f"Cierre solicitado: {reason}")
         self.closed = True
         self._stop_tray()
         if self.single_instance_server is not None:
@@ -1996,15 +2036,20 @@ class FloatingBarApp:
                 client.close()
             except Exception:
                 pass
-        self.root.destroy()
+        try:
+            self.root.destroy()
+        except Exception:
+            pass
 
     def run(self) -> int:
+        log_runtime_event("App iniciada")
         for client in self.clients:
             client.start()
         self.root.after(100, self.periodic_clock)
         self.root.after(120, self.refresh_now)
         self.root.after(self.interval_s * 1000, self.periodic_refresh)
         self.root.mainloop()
+        log_runtime_event("Mainloop finalizado")
         return 0
 
 
@@ -2102,7 +2147,11 @@ def main() -> int:
         return run_monitor(args)
     except KeyboardInterrupt:
         print("\nMonitor detenido por el usuario.")
+        log_runtime_event("Cierre por KeyboardInterrupt")
         return 0
+    except Exception:
+        log_runtime_event("Excepcion no controlada en main:\n" + traceback.format_exc())
+        return 1
 
 
 if __name__ == "__main__":

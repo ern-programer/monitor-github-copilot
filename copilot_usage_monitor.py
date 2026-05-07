@@ -1172,6 +1172,7 @@ class FloatingBarApp:
         self._show_desktop_restore_pending = False
         self._show_desktop_restore_attempts = 0
         self._last_visibility_guard_state = "normal"
+        self._last_taskbar_visibility_snapshot = ""
 
         self.clients = [CopilotUsageClient(state_file=sf, headless=True) for sf in state_files]
 
@@ -2315,14 +2316,37 @@ class FloatingBarApp:
             except Exception:
                 state = "unknown"
 
-            if state in {"iconic", "withdrawn"}:
+            try:
+                mapped = bool(self.root.winfo_ismapped())
+            except Exception:
+                mapped = False
+            try:
+                viewable = bool(self.root.winfo_viewable())
+            except Exception:
+                viewable = False
+
+            snapshot = f"state={state}|mapped={int(mapped)}|viewable={int(viewable)}"
+            if snapshot != self._last_taskbar_visibility_snapshot:
+                log_runtime_event(f"Taskbar visibility snapshot: {snapshot}")
+                self._last_taskbar_visibility_snapshot = snapshot
+
+            if state in {"iconic", "withdrawn"} or not mapped or not viewable:
                 if self._last_visibility_guard_state != state:
                     log_runtime_event(f"Visibility guard: detected state={state}; forcing restore")
                 try:
                     self.root.deiconify()
                     self.root.lift()
+                    self.root.overrideredirect(True)
                     self.apply_always_on_top()
                     self.apply_window_geometry(self.window_width)
+                except Exception:
+                    pass
+            else:
+                # Mantiene prioridad visual en taskbar aunque Windows haga "mostrar escritorio".
+                try:
+                    self.root.overrideredirect(True)
+                    self.root.lift()
+                    self.apply_always_on_top()
                 except Exception:
                     pass
             self._last_visibility_guard_state = state
